@@ -19,6 +19,8 @@ package android.app;
 
 import com.android.internal.policy.PolicyManager;
 
+import android.util.*;
+import android.os.SystemProperties;
 import android.accounts.AccountManager;
 import android.accounts.IAccountManager;
 import android.content.BroadcastReceiver;
@@ -104,6 +106,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.IllegalStateException;
+import java.lang.NullPointerException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -1512,6 +1516,87 @@ class ContextImpl extends Context {
         mOuterContext = this;
     }
 
+    static void paranoidInit(ActivityThread thread) {
+        // GLOBAL PROCESS IS YET UNKNOWN?
+        if (ExtendedPropertiesUtils.mParanoidMainThread == null) {
+            try {
+                // SET UP THREAD
+                ExtendedPropertiesUtils.mParanoidMainThread = thread;
+
+                // LOAD PROPERTY HASH MAP
+                ExtendedPropertiesUtils.refreshProperties();
+
+                // CHECK IF HYBRID MODE IS ON
+                if (ExtendedPropertiesUtils.getProperty(ExtendedPropertiesUtils.PARANOID_PREFIX + "hybrid_mode", 
+                    "0").equals("0")) throw new Exception();
+   
+                // TRY TO RETRIEVE A CONTEXT
+                ContextImpl context = createSystemContext(thread);
+                if (context == null) throw new NullPointerException();
+
+                // BIND IT TO ANDROID-SYSTEM
+                LoadedApk info = new LoadedApk(thread, "android", context, null,
+                    CompatibilityInfo.DEFAULT_COMPATIBILITY_INFO);
+                if (info == null) throw new NullPointerException();
+
+                context.init(info, null, thread);
+                ExtendedPropertiesUtils.mParanoidContext = context;
+                ExtendedPropertiesUtils.getTabletModeStatus();
+                // FETCH PACKAGE MANAGER
+                ExtendedPropertiesUtils.mParanoidPackageManager = 
+                    ExtendedPropertiesUtils.mParanoidContext.getPackageManager();
+                if (ExtendedPropertiesUtils.mParanoidPackageManager == null) throw new Exception();
+
+                // GET PACKAGE LIST
+                ExtendedPropertiesUtils.mParanoidPackageList = 
+                    ExtendedPropertiesUtils.mParanoidPackageManager.getInstalledPackages(0);
+                ExtendedPropertiesUtils.mParanoidGlobalHook.Pid = android.os.Process.myPid();
+
+                // INIT CONSTANTS
+                ExtendedPropertiesUtils.mParanoidScreenDefaultWidth = Integer.parseInt(
+                    ExtendedPropertiesUtils.getProperty(ExtendedPropertiesUtils.PARANOID_PREFIX + "screen_default_width", "0"));
+                ExtendedPropertiesUtils.mParanoidScreenDefaultHeight = Integer.parseInt(
+                    ExtendedPropertiesUtils.getProperty(ExtendedPropertiesUtils.PARANOID_PREFIX + "screen_default_height", "0"));
+                ExtendedPropertiesUtils.mParanoidScreenDefaultLayout = Integer.parseInt(
+                    ExtendedPropertiesUtils.getProperty(ExtendedPropertiesUtils.PARANOID_PREFIX + "screen_default_layout", "0"));
+                ExtendedPropertiesUtils.mParanoidScreenOppositeWidth = Integer.parseInt(
+                    ExtendedPropertiesUtils.getProperty(ExtendedPropertiesUtils.PARANOID_PREFIX + "screen_opposite_width", "0"));
+                ExtendedPropertiesUtils.mParanoidScreenOppositeHeight = Integer.parseInt(
+                    ExtendedPropertiesUtils.getProperty(ExtendedPropertiesUtils.PARANOID_PREFIX + "screen_opposite_height", "0"));
+                ExtendedPropertiesUtils.mParanoidScreenOppositeLayout = Integer.parseInt(
+                    ExtendedPropertiesUtils.getProperty(ExtendedPropertiesUtils.PARANOID_PREFIX + "screen_opposite_layout", "0"));
+                ExtendedPropertiesUtils.mParanoidRomTabletBase = Integer.parseInt(
+                    ExtendedPropertiesUtils.getProperty(ExtendedPropertiesUtils.PARANOID_PREFIX + "rom_tablet_base", "0"));
+                ExtendedPropertiesUtils.mParanoidRomPhoneBase = Integer.parseInt(
+                    ExtendedPropertiesUtils.getProperty(ExtendedPropertiesUtils.PARANOID_PREFIX + "rom_phone_base", "0"));
+                ExtendedPropertiesUtils.mParanoidRomCurrentBase = Integer.parseInt(
+                    ExtendedPropertiesUtils.getProperty(ExtendedPropertiesUtils.PARANOID_PREFIX + "rom_current_base", "0"));
+                ExtendedPropertiesUtils.mParanoidRomLcdDensity = SystemProperties.getInt("qemu.sf.lcd_density",
+                    SystemProperties.getInt("ro.sf.lcd_density", DisplayMetrics.DENSITY_DEFAULT));
+
+                // FIND PROCESS BY ITS PID AND GET ITS APP-INFO
+                ExtendedPropertiesUtils.mParanoidGlobalHook.Info = 
+                    ExtendedPropertiesUtils.getAppInfoFromPID(ExtendedPropertiesUtils.mParanoidGlobalHook.Pid);
+                if (ExtendedPropertiesUtils.mParanoidGlobalHook.Info != null) {
+                    // FILL COMMON VALUES AND CONFIGURE IT
+                    ExtendedPropertiesUtils.mParanoidGlobalHook.Name = 
+                        ExtendedPropertiesUtils.mParanoidGlobalHook.Info.packageName;
+                    ExtendedPropertiesUtils.mParanoidGlobalHook.Path = 
+                        ExtendedPropertiesUtils.mParanoidGlobalHook.Info.sourceDir.substring(0,
+                        ExtendedPropertiesUtils.mParanoidGlobalHook.Info.sourceDir.lastIndexOf("/"));
+                    ExtendedPropertiesUtils.paranoidConfigure(ExtendedPropertiesUtils.mParanoidGlobalHook);
+                } else {
+                    // ANDROID SYSTEM ITSELF
+                    ExtendedPropertiesUtils.mParanoidGlobalHook.Name = "android";
+                    ExtendedPropertiesUtils.mParanoidGlobalHook.Path = "/system/app";
+                    ExtendedPropertiesUtils.paranoidConfigure(ExtendedPropertiesUtils.mParanoidGlobalHook);
+                }                   
+            } catch (Exception e) { 
+                ExtendedPropertiesUtils.mParanoidMainThread = null;
+            }
+        }        
+    }
+
     final void init(LoadedApk packageInfo,
             IBinder activityToken, ActivityThread mainThread) {
         init(packageInfo, activityToken, mainThread, null, null);
@@ -1520,6 +1605,7 @@ class ContextImpl extends Context {
     final void init(LoadedApk packageInfo,
                 IBinder activityToken, ActivityThread mainThread,
                 Resources container, String basePackageName) {
+        paranoidInit(mainThread);
         mPackageInfo = packageInfo;
         mBasePackageName = basePackageName != null ? basePackageName : packageInfo.mPackageName;
         mResources = mPackageInfo.getResources(mainThread);
@@ -1541,6 +1627,7 @@ class ContextImpl extends Context {
     }
 
     final void init(Resources resources, ActivityThread mainThread) {
+        paranoidInit(mainThread);
         mPackageInfo = null;
         mBasePackageName = null;
         mResources = resources;

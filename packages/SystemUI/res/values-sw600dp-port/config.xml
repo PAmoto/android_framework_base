@@ -20,6 +20,6 @@
 <!-- These resources are around just to allow their values to be customized
      for different hardware and product builds. -->
 <resources>
-    <integer name="config_maxNotificationIcons">3</integer>
+    <integer name="config_maxNotificationIcons">2</integer>
 </resources>
 

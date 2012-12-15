@@ -32,5 +32,8 @@
     <declare-styleable name="NotificationRowLayout">
         <attr name="rowHeight" format="dimension" />
     </declare-styleable>
+    <declare-styleable name="HoloClock">
+        <attr name="showAlways" format="boolean" />
+    </declare-styleable>
 </resources>
 

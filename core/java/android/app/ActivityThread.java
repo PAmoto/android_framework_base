@@ -90,6 +90,7 @@ import android.view.ViewRootImpl;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.WindowManagerImpl;
+import android.util.ExtendedPropertiesUtils;
 
 import java.io.File;
 import java.io.FileDescriptor;
@@ -1505,6 +1506,7 @@ public final class ActivityThread {
         //}
 
         AssetManager assets = new AssetManager();
+        assets.paranoidOverrideAndExclude(resDir);
         assets.setThemeSupport(compInfo.isThemeable);
         if (assets.addAssetPath(resDir) == 0) {
             return null;
@@ -1524,6 +1526,7 @@ public final class ActivityThread {
 
         //Slog.i(TAG, "Resource: key=" + key + ", display metrics=" + metrics);
         DisplayMetrics metrics = getDisplayMetricsLocked(null, false);
+        metrics.paranoidOverride(assets);
         r = new Resources(assets, metrics, getConfiguration(), compInfo);
         if (false) {
             Slog.i(TAG, "Created app resources " + resDir + " " + r + ": "
@@ -2707,11 +2710,10 @@ public final class ActivityThread {
                 int h;
                 if (w < 0) {
                     Resources res = r.activity.getResources();
-                    mThumbnailHeight = h =
-                        res.getDimensionPixelSize(com.android.internal.R.dimen.thumbnail_height);
-
                     mThumbnailWidth = w =
-                        res.getDimensionPixelSize(com.android.internal.R.dimen.thumbnail_width);
+                        res.getDimensionPixelSize(ExtendedPropertiesUtils.mIsTablet ? com.android.internal.R.dimen.thumbnail_width_tablet : com.android.internal.R.dimen.thumbnail_width);
+                    mThumbnailHeight = h =
+                        res.getDimensionPixelSize(ExtendedPropertiesUtils.mIsTablet ? com.android.internal.R.dimen.thumbnail_height_tablet : com.android.internal.R.dimen.thumbnail_height);
                 } else {
                     h = mThumbnailHeight;
                 }
@@ -4530,6 +4532,7 @@ public final class ActivityThread {
         HardwareRenderer.disable(true);
         ActivityThread thread = new ActivityThread();
         thread.attach(true);
+        ContextImpl.paranoidInit(thread);
         return thread;
     }
 
@@ -4566,6 +4569,7 @@ public final class ActivityThread {
 
         ActivityThread thread = new ActivityThread();
         thread.attach(false);
+        ContextImpl.paranoidInit(thread);
 
         if (false) {
             Looper.myLooper().setMessageLogging(new

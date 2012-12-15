@@ -303,8 +303,6 @@ public class WindowManagerService extends IWindowManager.Stub
 
     final boolean mLimitedAlphaCompositing;
 
-    final boolean mSetLandscapeProperty;
-
     final WindowManagerPolicy mPolicy = PolicyManager.makeNewWindowManager();
 
     final IActivityManager mActivityManager;
@@ -757,8 +755,6 @@ public class WindowManagerService extends IWindowManager.Stub
         mAllowBootMessages = showBootMsgs;
         mLimitedAlphaCompositing = context.getResources().getBoolean(
                 com.android.internal.R.bool.config_sf_limitedAlpha);
-        mSetLandscapeProperty = context.getResources().getBoolean(
-                com.android.internal.R.bool.config_setLandscapeProp);
 
         mPowerManager = pm;
         mPowerManager.setPolicy(mPolicy);
@@ -5054,11 +5050,6 @@ public class WindowManagerService extends IWindowManager.Stub
         SystemProperties.set(StrictMode.VISUAL_PROPERTY, value);
     }
 
-    public void setLandscapeProperty(String value) {
-        if (!mSetLandscapeProperty) return;
-        SystemProperties.set("sys.orientation.landscape", value);
-    }
-
     /**
      * Takes a snapshot of the screen.  In landscape mode this grabs the whole screen.
      * In portrait mode, it grabs the upper region of the screen based on the vertical dimension
@@ -5987,7 +5978,7 @@ public class WindowManagerService extends IWindowManager.Stub
             unrotDh = dh;
         }
 	int sw = (int)(unrotDw/density);
-        sw = reduceConfigWidthSize(sw, Surface.ROTATION_0, density, unrotDw, unrotDh);
+        sw = reduceConfigWidthSize((int) (unrotDw / density), Surface. ROTATION_0, density, unrotDw, unrotDh);
         sw = reduceConfigWidthSize(sw, Surface.ROTATION_90, density, unrotDh, unrotDw);
         sw = reduceConfigWidthSize(sw, Surface.ROTATION_180, density, unrotDw, unrotDh);
         sw = reduceConfigWidthSize(sw, Surface.ROTATION_270, density, unrotDh, unrotDw);
@@ -6073,10 +6064,8 @@ public class WindowManagerService extends IWindowManager.Stub
         int orientation = Configuration.ORIENTATION_SQUARE;
         if (dw < dh) {
             orientation = Configuration.ORIENTATION_PORTRAIT;
-            setLandscapeProperty("0");
         } else if (dw > dh) {
             orientation = Configuration.ORIENTATION_LANDSCAPE;
-            setLandscapeProperty("1");
         }
         config.orientation = orientation;
 

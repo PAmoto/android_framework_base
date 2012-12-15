@@ -123,7 +123,7 @@ public class DockBatteryController extends BroadcastReceiver {
         int mText = View.GONE;
         int mIconStyle = BATTERY_ICON_STYLE_NORMAL;
 
-        if (mBatteryStyle == 0) {
+        if (mBatteryStyle == 0 || mBatteryStyle == 1) {
             mIcon = mDockStatus ? (View.VISIBLE) : (View.GONE);
             mIconStyle = mDockCharging ? BATTERY_ICON_STYLE_CHARGE
                     : BATTERY_ICON_STYLE_NORMAL;

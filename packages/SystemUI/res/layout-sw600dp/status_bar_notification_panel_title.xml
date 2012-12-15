@@ -35,7 +35,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
         android:shrinkColumns="2,4"
-        android:stretchColumns="8"
+        android:stretchColumns="7"
         >
         <TableRow>
 
@@ -129,6 +129,13 @@
                 android:text="@string/status_bar_settings_settings_button"
                 />
 
+            <!-- this will stretch to eat up available space -->
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                />
+
             <ImageView
                 android:id="@+id/dock_battery"
                 android:layout_height="wrap_content"
@@ -173,13 +180,6 @@
                 android:text="@string/status_bar_settings_settings_button"
                 />
 
-            <!-- this will stretch to eat up available space -->
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                />
-
             <FrameLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -210,26 +210,27 @@
     </TableLayout>
 
     <com.android.systemui.statusbar.tablet.HoloClock
-        android:id="@+id/clock"
+        android:id="@+id/clock_big"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_marginRight="16dip"
         android:layout_marginTop="16dip"
+        systemui:showAlways="true"
         >
         <TextView android:id="@+id/time_bg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="right"
             android:singleLine="true"
-            android:textSize="92sp"
+            android:textSize="72sp"
             android:textColor="#ffffff" />
         <TextView android:id="@+id/time_fg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="right"
             android:singleLine="true"
-            android:textSize="92sp"
+            android:textSize="72sp"
             android:textColor="#ffffff" />
     </com.android.systemui.statusbar.tablet.HoloClock>
 

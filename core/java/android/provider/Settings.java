@@ -2337,6 +2337,12 @@ public final class Settings {
         public static final String COMBINED_BAR_AUTO_HIDE = "combined_bar_auto_hide";
 
         /**
+        * Number of notification symbols
+        * @hide
+        */
+        public static final String MAX_NOTIFICATION_ICONS = "max_notification_icons";
+
+        /**
          * Display style of AM/PM next to clock in status bar
          * 0: Normal display (Eclair stock)
          * 1: Small display (Froyo stock)
@@ -2388,6 +2394,54 @@ public final class Settings {
          * @hide
          */
         public static final String STATUS_BAR_IME_SWITCHER = "status_bar_ime_switcher";
+
+ 	/**
+         * StatusBar Transparency
+         * @hide
+         */
+        public static final String STATUS_BAR_TRANSPARENCY = "status_bar_transparency";
+
+ 	/**
+         * StatusBar Hardware Rendering
+         * @hide
+         */
+        public static final String STATUS_BAR_HW_RENDERING = "status_bar_hw_rendering";
+
+ 	/**
+         * Lockscreen Vibration
+         * @hide
+         */
+        public static final String LOCKSCREEN_VIBRATION = "lockscreen_vibration";
+
+ 	/**
+         * Software Keys
+         * @hide
+         */
+        public static final String SOFT_KEYS = "soft_keys";
+
+ 	/**
+         * Sense 4.0 Recent Apps
+         * @hide
+         */
+        public static final String SENSE_RECENT = "sense_recent";
+
+ 	/**
+         * Recent Apps Icons
+         * @hide
+         */
+        public static final String RECENTS_ICON = "recent_icon";
+
+ 	/**
+         * Recent Apps Text Size
+         * @hide
+         */
+        public static final String RECENTS_TEXT_SIZE = "recent_text_size";
+
+ 	/**
+         * Statusbar State
+         * @hide
+         */
+        public static final String STATUSBAR_STATE = "statusbar_state";
 
         /**
          * Whether to use a separate delay for "slide to unlock" and security
@@ -2590,6 +2644,14 @@ public final class Settings {
          * @hide
          */
         public static final String STATUS_BAR_NOTIF_COUNT = "status_bar_notif_count";
+
+        /*
+         * Control the display of the action overflow button within app UI.
+         * 0 = force off
+         * 1 = use system default
+         * @hide
+         */
+        public static final String UI_MENU_BUTTON_BEHAVIOUR = "ui_menu_button_behaviour";
 
         /**
          * Settings to backup. This is here so that it's in the same place as the settings

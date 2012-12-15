@@ -64,6 +64,7 @@ import android.util.EventLog;
 import android.util.Log;
 import android.util.Slog;
 import android.view.WindowManagerPolicy;
+import android.util.ExtendedPropertiesUtils;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -854,13 +855,15 @@ final class ActivityStack {
         int h = mThumbnailHeight;
         if (w < 0) {
             mThumbnailWidth = w =
-                res.getDimensionPixelSize(com.android.internal.R.dimen.thumbnail_width);
+                res.getDimensionPixelSize(ExtendedPropertiesUtils.mIsTablet ? com.android.internal.R.dimen.thumbnail_width_tablet : com.android.internal.R.dimen.thumbnail_width);
             mThumbnailHeight = h =
-                res.getDimensionPixelSize(com.android.internal.R.dimen.thumbnail_height);
+                res.getDimensionPixelSize(ExtendedPropertiesUtils.mIsTablet ? com.android.internal.R.dimen.thumbnail_height_tablet : com.android.internal.R.dimen.thumbnail_height);
         }
 
         if (w > 0) {
-            return mService.mWindowManager.screenshotApplications(who.appToken, w, h);
+		try{
+	            return mService.mWindowManager.screenshotApplications(who.appToken, w, h);
+		} catch(Exception e) {}
         }
         return null;
     }

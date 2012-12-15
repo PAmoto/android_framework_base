@@ -146,7 +146,11 @@ public class NavigationBarView extends LinearLayout {
     }
 
     protected void unregisterReceivers() {
-        mContext.unregisterReceiver(mNavBarReceiver);
+        try{
+             mContext.unregisterReceiver(mNavBarReceiver);
+        } catch(Exception e){
+             // Our receiver is not registered yet.
+        }
     }
 
     public class NavBarReceiver extends BroadcastReceiver {

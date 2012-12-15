@@ -58,6 +58,7 @@ import android.os.SystemProperties;
 import android.os.UEventObserver;
 import android.os.Vibrator;
 import android.provider.Settings;
+import android.util.ExtendedPropertiesUtils;
 
 import com.android.internal.R;
 import com.android.internal.app.ShutdownThread;
@@ -317,7 +318,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     int mStatusBarHeight;
     final ArrayList<WindowState> mStatusBarPanels = new ArrayList<WindowState>();
     WindowState mNavigationBar = null;
-    boolean mHasNavigationBar = false;
+    boolean mHasNavigationBar;
     int mNavigationBarWidth = 0, mNavigationBarHeight = 0;
 
     WindowState mKeyguard = null;
@@ -536,12 +537,19 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                     "fancy_rotation_anim"), false, this);
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.ACCELEROMETER_ROTATION_ANGLES), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.SOFT_KEYS), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.STATUSBAR_STATE), false, this);
             updateSettings();
         }
 
         @Override public void onChange(boolean selfChange) {
             updateSettings();
             updateRotation(false);
+            mForceStatusBar = true;
+            finishAnimationLw();
+            mForceStatusBar = false;
         }
     }
     
@@ -1085,36 +1093,11 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             }
         }
 
-        // Determine whether the status bar can hide based on the size
-        // of the screen.  We assume sizes > 600dp are tablets where we
-        // will use the system bar.
-        int shortSizeDp = shortSize
-                * DisplayMetrics.DENSITY_DEFAULT
-                / DisplayMetrics.DENSITY_DEVICE;
-        mStatusBarCanHide = shortSizeDp < 600;
+        // Determine whether to show tablet or phone statusbar
         mStatusBarHeight = mContext.getResources().getDimensionPixelSize(
                 mStatusBarCanHide
                 ? com.android.internal.R.dimen.status_bar_height
                 : com.android.internal.R.dimen.system_bar_height);
-
-        mHasNavigationBar = mContext.getResources().getBoolean(
-                com.android.internal.R.bool.config_showNavigationBar);
-        // Allow a system property to override this. Used by the emulator.
-        // See also hasNavigationBar().
-        String navBarOverride = SystemProperties.get("qemu.hw.mainkeys");
-        if (! "".equals(navBarOverride)) {
-            if      (navBarOverride.equals("1")) mHasNavigationBar = false;
-            else if (navBarOverride.equals("0")) mHasNavigationBar = true;
-        }
-
-        mNavigationBarHeight = mHasNavigationBar
-                ? mContext.getResources().getDimensionPixelSize(
-                    com.android.internal.R.dimen.navigation_bar_height)
-                : 0;
-        mNavigationBarWidth = mHasNavigationBar
-                ? mContext.getResources().getDimensionPixelSize(
-                    com.android.internal.R.dimen.navigation_bar_width)
-                : 0;
 
         if ("portrait".equals(SystemProperties.get("persist.demo.hdmirotation"))) {
             mHdmiRotation = mPortraitRotation;
@@ -1139,6 +1122,19 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                     Settings.System.VOLUME_WAKE_SCREEN, 0) == 1);
             mVolBtnMusicControls = (Settings.System.getInt(resolver,
                     Settings.System.VOLBTN_MUSIC_CONTROLS, 1) == 1);
+            
+            mStatusBarCanHide = canStatusBarHide();
+            mHasNavigationBar = Settings.System.getInt(mContext.getContentResolver(), Settings.System.SOFT_KEYS, mContext.getResources().getBoolean(com.android.internal.R.bool.config_showNavigationBar) ? 1 : 0) == 1 && mStatusBarCanHide && Settings.System.getInt(mContext.getContentResolver(), Settings.System.STATUSBAR_STATE, 0) != 1;
+
+            mNavigationBarHeight = mHasNavigationBar
+                ? mContext.getResources().getDimensionPixelSize(
+                    com.android.internal.R.dimen.navigation_bar_height)
+                : 0;
+            mNavigationBarWidth = mHasNavigationBar
+                ? mContext.getResources().getDimensionPixelSize(
+                    com.android.internal.R.dimen.navigation_bar_width)
+                : 0;
+
             int accelerometerDefault = Settings.System.getInt(resolver,
                     Settings.System.ACCELEROMETER_ROTATION, DEFAULT_ACCELEROMETER_ROTATION);
             
@@ -1435,7 +1431,8 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     }
 
     public boolean canStatusBarHide() {
-        return mStatusBarCanHide;
+
+        return !ExtendedPropertiesUtils.mIsTablet;
     }
 
     public int getNonDecorDisplayWidth(int fullWidth, int fullHeight, int rotation) {
@@ -1475,7 +1472,8 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         return attrs.type != WindowManager.LayoutParams.TYPE_STATUS_BAR
                 && attrs.type != WindowManager.LayoutParams.TYPE_WALLPAPER;
     }
-    
+
+
     /** {@inheritDoc} */
     public View addStartingWindow(IBinder appToken, String packageName, int theme,
             CompatibilityInfo compatInfo, CharSequence nonLocalizedLabel, int labelRes,
@@ -2682,8 +2680,8 @@ public class PhoneWindowManager implements WindowManagerPolicy {
                 // and mTopIsFullscreen is that that mTopIsFullscreen is set only if the window
                 // has the FLAG_FULLSCREEN set.  Not sure if there is another way that to be the
                 // case though.
-                if (topIsFullscreen) {
-                    if (mStatusBarCanHide ||
+                if (topIsFullscreen || Settings.System.getInt(mContext.getContentResolver(), Settings.System.STATUSBAR_STATE, 0) == 1) {
+                    if (mStatusBarCanHide || Settings.System.getInt(mContext.getContentResolver(), Settings.System.STATUSBAR_STATE, 0) == 1 ||
                         (((mFocusedWindow != null) && (mFocusedWindow.getSystemUiVisibility() & View.SYSTEM_UI_FLAG_LOW_PROFILE) == 1) &&
                          (Settings.System.getInt(mContext.getContentResolver(),
                                                  Settings.System.COMBINED_BAR_AUTO_HIDE, 0) == 1))) {
@@ -4110,7 +4108,8 @@ public class PhoneWindowManager implements WindowManagerPolicy {
     }
 
     // Use this instead of checking config_showNavigationBar so that it can be consistently
-    // overridden by qemu.hw.mainkeys in the emulator.
+    
+    // overridden by Settings.System.SOFT_KEYS
     public boolean hasNavigationBar() {
         return mHasNavigationBar;
     }

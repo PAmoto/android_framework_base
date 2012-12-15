@@ -18,10 +18,13 @@ package com.android.systemui.statusbar;
 
 import android.app.ActivityManager;
 import android.app.Service;
+import android.database.ContentObserver;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.PixelFormat;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.os.ServiceManager;
@@ -59,15 +62,42 @@ public abstract class StatusBar extends SystemUI implements CommandQueue.Callbac
     public abstract int getStatusBarHeight();
     public abstract void animateCollapse();
 
+    private View mStatusBar;
     private DoNotDisturb mDoNotDisturb;
 
     private boolean mShowNotificationCounts;
+    private boolean mHardwareRendering;
+    private static int mOpacity;
+    private Handler mHandler;
+
+    private final class SettingsObserver extends ContentObserver {
+        SettingsObserver(Handler handler) {
+            super(handler);
+        }
+
+        void observe() {
+            ContentResolver resolver = mContext.getContentResolver();
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.STATUS_BAR_TRANSPARENCY), false, this);
+            setStatusBarParams();
+        }
+
+        @Override public void onChange(boolean selfChange) {
+            setStatusBarParams();
+        }
+    }
 
     public void start() {
         // First set up our views and stuff.
-        View sb = makeStatusBarView();
+        mStatusBar = makeStatusBarView();
 
-        mStatusBarContainer.addView(sb);
+        mStatusBarContainer.addView(mStatusBar););
+
+        mShowNotificationCounts = Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.STATUS_BAR_NOTIF_COUNT, 0) == 1;
+
+        mHardwareRendering = Settings.System.getInt(mContext.getContentResolver(),
+                Settings.System.STATUS_BAR_HW_RENDERING, 0) == 1;
 
         mShowNotificationCounts = Settings.System.getInt(mContext.getContentResolver(),
                 Settings.System.STATUS_BAR_NOTIF_COUNT, 0) == 1;
@@ -128,11 +158,13 @@ public abstract class StatusBar extends SystemUI implements CommandQueue.Callbac
                 WindowManager.LayoutParams.TYPE_STATUS_BAR,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                     | WindowManager.LayoutParams.FLAG_TOUCHABLE_WHEN_WAKING
-                    | WindowManager.LayoutParams.FLAG_SPLIT_TOUCH,
-                // We use a pixel format of RGB565 for the status bar to save memory bandwidth and
-                // to ensure that the layer can be handled by HWComposer.  On some devices the
-                // HWComposer is unable to handle SW-rendered RGBX_8888 layers.
-                PixelFormat.RGB_565);
+                    | (mHardwareRendering ? WindowManager.LayoutParams.FLAG_SPLIT_TOUCH |
+                   WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED :
+                    WindowManager.LayoutParams.FLAG_SPLIT_TOUCH),
+                mHardwareRendering ? PixelFormat.TRANSPARENT : PixelFormat.RGB_565);
+        mHandler = new Handler();
+        SettingsObserver settingsObserver = new SettingsObserver(mHandler);
+        settingsObserver.observe();
         } else {
         lp = new WindowManager.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -149,11 +181,6 @@ public abstract class StatusBar extends SystemUI implements CommandQueue.Callbac
         final Display defaultDisplay 
             = ((WindowManager)mContext.getSystemService(Context.WINDOW_SERVICE))
                 .getDefaultDisplay();
-
-        // We explicitly leave FLAG_HARDWARE_ACCELERATED out of the flags.  The status bar occupies
-        // very little screen real-estate and is updated fairly frequently.  By using CPU rendering
-        // for the status bar, we prevent the GPU from having to wake up just to do these small
-        // updates, which should help keep power consumption down.
 
         lp.gravity = getStatusBarGravity();
         lp.setTitle("StatusBar");
@@ -172,6 +199,12 @@ public abstract class StatusBar extends SystemUI implements CommandQueue.Callbac
         }
 
         mDoNotDisturb = new DoNotDisturb(mContext);
+    }
+
+    private void setStatusBarParams(){
+        mOpacity = Settings.System.getInt(mStatusBar.getContext().getContentResolver(), Settings.System.STATUS_BAR_TRANSPARENCY, 100);
+        if(mHardwareRendering)
+             mStatusBar.setBackgroundColor((int) (((float) mOpacity / 100.0f) * 255) * 0x1000000);
     }
 
     protected View updateNotificationVetoButton(View row, StatusBarNotification n) {

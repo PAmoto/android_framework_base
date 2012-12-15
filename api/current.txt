@@ -2679,6 +2679,9 @@ package android.app {
     field public static final int RESULT_OK = -1; // 0xffffffff
   }
 
+   static final class Activity.NonConfigurationInstances {
+  }
+
   public deprecated class ActivityGroup extends android.app.Activity {
     ctor public ActivityGroup();
     ctor public ActivityGroup(boolean);
@@ -2821,6 +2824,96 @@ package android.app {
     field public int numRunning;
     field public android.graphics.Bitmap thumbnail;
     field public android.content.ComponentName topActivity;
+  }
+
+  public final class ActivityThread {
+    method public final android.content.IContentProvider acquireExistingProvider(android.content.Context, java.lang.String);
+    method public final android.content.IContentProvider acquireProvider(android.content.Context, java.lang.String);
+    method public final void applyConfigurationToResources(android.content.res.Configuration);
+    method public static android.app.ActivityThread currentActivityThread();
+    method public static android.app.Application currentApplication();
+    method public static java.lang.String currentPackageName();
+    method public final android.app.Activity getActivity(android.os.IBinder);
+    method public android.app.Application getApplication();
+    method public android.app.ActivityThread.ApplicationThread getApplicationThread();
+    method public static com.android.internal.app.IAssetRedirectionManager getAssetRedirectionManager();
+    method public android.content.res.Configuration getConfiguration();
+    method public android.app.Instrumentation getInstrumentation();
+    method public int getIntCoreSetting(java.lang.String, int);
+    method public android.os.Looper getLooper();
+    method public final android.app.LoadedApk getPackageInfo(java.lang.String, android.content.res.CompatibilityInfo, int);
+    method public final android.app.LoadedApk getPackageInfo(android.content.pm.ApplicationInfo, android.content.res.CompatibilityInfo, int);
+    method public final android.app.LoadedApk getPackageInfoNoCheck(android.content.pm.ApplicationInfo, android.content.res.CompatibilityInfo);
+    method public static android.content.pm.IPackageManager getPackageManager();
+    method public java.lang.String getProcessName();
+    method public java.lang.String getProfileFilePath();
+    method public android.app.ContextImpl getSystemContext();
+    method public void installSystemApplicationInfo(android.content.pm.ApplicationInfo);
+    method public final void installSystemProviders(java.util.List<android.content.pm.ProviderInfo>);
+    method public boolean isProfiling();
+    method public static void main(java.lang.String[]);
+    method public final android.app.LoadedApk peekPackageInfo(java.lang.String, boolean);
+    method public final android.app.ActivityThread.ActivityClientRecord performDestroyActivity(android.os.IBinder, boolean);
+    method public final void performNewIntents(android.os.IBinder, java.util.List<android.content.Intent>);
+    method public final android.app.ActivityThread.ActivityClientRecord performResumeActivity(android.os.IBinder, boolean);
+    method public void registerOnActivityPausedListener(android.app.Activity, android.app.OnActivityPausedListener);
+    method public final boolean releaseProvider(android.content.IContentProvider);
+    method public final void requestRelaunchActivity(android.os.IBinder, java.util.List<android.app.ResultInfo>, java.util.List<android.content.Intent>, int, boolean, android.content.res.Configuration, boolean);
+    method public final android.content.pm.ActivityInfo resolveActivityInfo(android.content.Intent);
+    method public final void sendActivityResult(android.os.IBinder, java.lang.String, int, int, android.content.Intent);
+    method public final android.app.Activity startActivityNow(android.app.Activity, java.lang.String, android.content.Intent, android.content.pm.ActivityInfo, android.os.IBinder, android.os.Bundle, android.app.Activity.NonConfigurationInstances);
+    method public static final android.app.ActivityThread systemMain();
+    method public void unregisterOnActivityPausedListener(android.app.Activity, android.app.OnActivityPausedListener);
+  }
+
+   static final class ActivityThread.ActivityClientRecord {
+    method public boolean isPreHoneycomb();
+  }
+
+  private class ActivityThread.ApplicationThread {
+    method public final void bindApplication(java.lang.String, android.content.pm.ApplicationInfo, java.util.List<android.content.pm.ProviderInfo>, android.content.ComponentName, java.lang.String, android.os.ParcelFileDescriptor, boolean, android.os.Bundle, android.app.IInstrumentationWatcher, int, boolean, boolean, android.content.res.Configuration, android.content.res.CompatibilityInfo, java.util.Map<java.lang.String, android.os.IBinder>, android.os.Bundle);
+    method public void clearDnsCache();
+    method public void dispatchPackageBroadcast(int, java.lang.String[]);
+    method public void dumpActivity(java.io.FileDescriptor, android.os.IBinder, java.lang.String, java.lang.String[]);
+    method public void dumpGfxInfo(java.io.FileDescriptor, java.lang.String[]);
+    method public void dumpHeap(boolean, java.lang.String, android.os.ParcelFileDescriptor);
+    method public android.os.Debug.MemoryInfo dumpMemInfo(java.io.FileDescriptor, boolean, boolean, java.lang.String[]);
+    method public void dumpService(java.io.FileDescriptor, android.os.IBinder, java.lang.String[]);
+    method public void getMemoryInfo(android.os.Debug.MemoryInfo);
+    method public void processInBackground();
+    method public void profilerControl(boolean, java.lang.String, android.os.ParcelFileDescriptor, int);
+    method public void requestThumbnail(android.os.IBinder);
+    method public void scheduleActivityConfigurationChanged(android.os.IBinder);
+    method public final void scheduleBindService(android.os.IBinder, android.content.Intent, boolean);
+    method public void scheduleConfigurationChanged(android.content.res.Configuration);
+    method public void scheduleCrash(java.lang.String);
+    method public final void scheduleCreateBackupAgent(android.content.pm.ApplicationInfo, android.content.res.CompatibilityInfo, int);
+    method public final void scheduleCreateService(android.os.IBinder, android.content.pm.ServiceInfo, android.content.res.CompatibilityInfo);
+    method public final void scheduleDestroyActivity(android.os.IBinder, boolean, int);
+    method public final void scheduleDestroyBackupAgent(android.content.pm.ApplicationInfo, android.content.res.CompatibilityInfo);
+    method public final void scheduleExit();
+    method public final void scheduleLaunchActivity(android.content.Intent, android.os.IBinder, int, android.content.pm.ActivityInfo, android.content.res.Configuration, android.content.res.CompatibilityInfo, android.os.Bundle, java.util.List<android.app.ResultInfo>, java.util.List<android.content.Intent>, boolean, boolean, java.lang.String, android.os.ParcelFileDescriptor, boolean);
+    method public void scheduleLowMemory();
+    method public final void scheduleNewIntent(java.util.List<android.content.Intent>, android.os.IBinder);
+    method public final void schedulePauseActivity(android.os.IBinder, boolean, boolean, int);
+    method public final void scheduleReceiver(android.content.Intent, android.content.pm.ActivityInfo, android.content.res.CompatibilityInfo, int, java.lang.String, android.os.Bundle, boolean);
+    method public void scheduleRegisteredReceiver(android.content.IIntentReceiver, android.content.Intent, int, java.lang.String, android.os.Bundle, boolean, boolean) throws android.os.RemoteException;
+    method public final void scheduleRelaunchActivity(android.os.IBinder, java.util.List<android.app.ResultInfo>, java.util.List<android.content.Intent>, int, boolean, android.content.res.Configuration);
+    method public final void scheduleResumeActivity(android.os.IBinder, boolean);
+    method public final void scheduleSendResult(android.os.IBinder, java.util.List<android.app.ResultInfo>);
+    method public final void scheduleServiceArgs(android.os.IBinder, boolean, int, int, android.content.Intent);
+    method public final void scheduleSleeping(android.os.IBinder, boolean);
+    method public final void scheduleStopActivity(android.os.IBinder, boolean, int);
+    method public final void scheduleStopService(android.os.IBinder);
+    method public final void scheduleSuicide();
+    method public void scheduleTrimMemory(int);
+    method public final void scheduleUnbindService(android.os.IBinder, android.content.Intent);
+    method public final void scheduleWindowVisibility(android.os.IBinder, boolean);
+    method public void setCoreSettings(android.os.Bundle);
+    method public void setHttpProxy(java.lang.String, java.lang.String, java.lang.String);
+    method public void setSchedulingGroup(int);
+    method public void updatePackageCompatibilityInfo(java.lang.String, android.content.res.CompatibilityInfo);
+    method public void updateTimeZone();
   }
 
   public class AlarmManager {
@@ -3002,6 +3095,85 @@ package android.app {
     method public void writeToParcel(android.os.Parcel, int);
     field public long durationMillis;
     field public java.lang.String serviceDetails;
+  }
+
+   class ContextImpl extends android.content.Context {
+    ctor public ContextImpl(android.app.ContextImpl);
+    method public boolean bindService(android.content.Intent, android.content.ServiceConnection, int);
+    method public int checkCallingOrSelfPermission(java.lang.String);
+    method public int checkCallingOrSelfUriPermission(android.net.Uri, int);
+    method public int checkCallingPermission(java.lang.String);
+    method public int checkCallingUriPermission(android.net.Uri, int);
+    method public int checkPermission(java.lang.String, int, int);
+    method public int checkUriPermission(android.net.Uri, int, int, int);
+    method public int checkUriPermission(android.net.Uri, java.lang.String, java.lang.String, int, int, int);
+    method public void clearWallpaper() throws java.io.IOException;
+    method public android.content.Context createPackageContext(java.lang.String, int) throws android.content.pm.PackageManager.NameNotFoundException;
+    method public java.lang.String[] databaseList();
+    method public boolean deleteDatabase(java.lang.String);
+    method public boolean deleteFile(java.lang.String);
+    method public void enforceCallingOrSelfPermission(java.lang.String, java.lang.String);
+    method public void enforceCallingOrSelfUriPermission(android.net.Uri, int, java.lang.String);
+    method public void enforceCallingPermission(java.lang.String, java.lang.String);
+    method public void enforceCallingUriPermission(android.net.Uri, int, java.lang.String);
+    method public void enforcePermission(java.lang.String, int, int, java.lang.String);
+    method public void enforceUriPermission(android.net.Uri, int, int, int, java.lang.String);
+    method public void enforceUriPermission(android.net.Uri, java.lang.String, java.lang.String, int, int, int, java.lang.String);
+    method public java.lang.String[] fileList();
+    method public android.content.Context getApplicationContext();
+    method public android.content.pm.ApplicationInfo getApplicationInfo();
+    method public android.content.res.AssetManager getAssets();
+    method public java.io.File getCacheDir();
+    method public java.lang.ClassLoader getClassLoader();
+    method public android.content.ContentResolver getContentResolver();
+    method public java.io.File getDatabasePath(java.lang.String);
+    method public java.io.File getDir(java.lang.String, int);
+    method public java.io.File getExternalCacheDir();
+    method public java.io.File getExternalFilesDir(java.lang.String);
+    method public java.io.File getFileStreamPath(java.lang.String);
+    method public java.io.File getFilesDir();
+    method public android.os.Looper getMainLooper();
+    method public java.io.File getObbDir();
+    method public java.lang.String getPackageCodePath();
+    method public android.content.pm.PackageManager getPackageManager();
+    method public java.lang.String getPackageName();
+    method public java.lang.String getPackageResourcePath();
+    method public android.content.res.Resources getResources();
+    method public android.content.SharedPreferences getSharedPreferences(java.lang.String, int);
+    method public java.io.File getSharedPrefsFile(java.lang.String);
+    method public java.lang.Object getSystemService(java.lang.String);
+    method public android.content.res.Resources.Theme getTheme();
+    method public int getThemeResId();
+    method public android.graphics.drawable.Drawable getWallpaper();
+    method public int getWallpaperDesiredMinimumHeight();
+    method public int getWallpaperDesiredMinimumWidth();
+    method public void grantUriPermission(java.lang.String, android.net.Uri, int);
+    method public java.io.FileInputStream openFileInput(java.lang.String) throws java.io.FileNotFoundException;
+    method public java.io.FileOutputStream openFileOutput(java.lang.String, int) throws java.io.FileNotFoundException;
+    method public android.database.sqlite.SQLiteDatabase openOrCreateDatabase(java.lang.String, int, android.database.sqlite.SQLiteDatabase.CursorFactory);
+    method public android.database.sqlite.SQLiteDatabase openOrCreateDatabase(java.lang.String, int, android.database.sqlite.SQLiteDatabase.CursorFactory, android.database.DatabaseErrorHandler);
+    method public android.graphics.drawable.Drawable peekWallpaper();
+    method public android.content.Intent registerReceiver(android.content.BroadcastReceiver, android.content.IntentFilter);
+    method public android.content.Intent registerReceiver(android.content.BroadcastReceiver, android.content.IntentFilter, java.lang.String, android.os.Handler);
+    method public void removeStickyBroadcast(android.content.Intent);
+    method public void revokeUriPermission(android.net.Uri, int);
+    method public void sendBroadcast(android.content.Intent);
+    method public void sendBroadcast(android.content.Intent, java.lang.String);
+    method public void sendOrderedBroadcast(android.content.Intent, java.lang.String);
+    method public void sendOrderedBroadcast(android.content.Intent, java.lang.String, android.content.BroadcastReceiver, android.os.Handler, int, java.lang.String, android.os.Bundle);
+    method public void sendStickyBroadcast(android.content.Intent);
+    method public void sendStickyOrderedBroadcast(android.content.Intent, android.content.BroadcastReceiver, android.os.Handler, int, java.lang.String, android.os.Bundle);
+    method public void setTheme(int);
+    method public void setWallpaper(android.graphics.Bitmap) throws java.io.IOException;
+    method public void setWallpaper(java.io.InputStream) throws java.io.IOException;
+    method public void startActivities(android.content.Intent[]);
+    method public void startActivity(android.content.Intent);
+    method public boolean startInstrumentation(android.content.ComponentName, java.lang.String, android.os.Bundle);
+    method public void startIntentSender(android.content.IntentSender, android.content.Intent, int, int, int) throws android.content.IntentSender.SendIntentException;
+    method public android.content.ComponentName startService(android.content.Intent);
+    method public boolean stopService(android.content.Intent);
+    method public void unbindService(android.content.ServiceConnection);
+    method public void unregisterReceiver(android.content.BroadcastReceiver);
   }
 
   public class DatePickerDialog extends android.app.AlertDialog implements android.widget.DatePicker.OnDateChangedListener android.content.DialogInterface.OnClickListener {
@@ -3390,6 +3562,15 @@ package android.app {
     field public static final int TRANSIT_UNSET = -1; // 0xffffffff
   }
 
+  public abstract interface IInstrumentationWatcher implements android.os.IInterface {
+    method public abstract void instrumentationFinished(android.content.ComponentName, int, android.os.Bundle) throws android.os.RemoteException;
+    method public abstract void instrumentationStatus(android.content.ComponentName, int, android.os.Bundle) throws android.os.RemoteException;
+  }
+
+  public abstract interface IServiceConnection implements android.os.IInterface {
+    method public abstract void connected(android.content.ComponentName, android.os.IBinder) throws android.os.RemoteException;
+  }
+
   public class Instrumentation {
     ctor public Instrumentation();
     method public void addMonitor(android.app.Instrumentation.ActivityMonitor);
@@ -3543,6 +3724,28 @@ package android.app {
     method public void setSelection(int);
   }
 
+  public final class LoadedApk {
+    ctor public LoadedApk(android.app.ActivityThread, android.content.pm.ApplicationInfo, android.content.res.CompatibilityInfo, android.app.ActivityThread, java.lang.ClassLoader, boolean, boolean);
+    ctor public LoadedApk(android.app.ActivityThread, java.lang.String, android.content.Context, android.content.pm.ApplicationInfo, android.content.res.CompatibilityInfo);
+    method public android.content.IIntentReceiver forgetReceiverDispatcher(android.content.Context, android.content.BroadcastReceiver);
+    method public final android.app.IServiceConnection forgetServiceDispatcher(android.content.Context, android.content.ServiceConnection);
+    method public java.lang.String getAppDir();
+    method public android.content.pm.ApplicationInfo getApplicationInfo();
+    method public android.content.res.AssetManager getAssets(android.app.ActivityThread);
+    method public java.lang.ClassLoader getClassLoader();
+    method public java.lang.String getDataDir();
+    method public java.io.File getDataDirFile();
+    method public java.lang.String getPackageName();
+    method public android.content.IIntentReceiver getReceiverDispatcher(android.content.BroadcastReceiver, android.content.Context, android.os.Handler, android.app.Instrumentation, boolean);
+    method public java.lang.String getResDir();
+    method public android.content.res.Resources getResources(android.app.ActivityThread);
+    method public final android.app.IServiceConnection getServiceDispatcher(android.content.ServiceConnection, android.content.Context, android.os.Handler, int);
+    method public boolean isSecurityViolation();
+    method public android.app.Application makeApplication(boolean, android.app.Instrumentation);
+    method public void removeContextRegistrations(android.content.Context, java.lang.String, java.lang.String);
+    field public final android.view.CompatibilityInfoHolder mCompatibilityInfo;
+  }
+
   public abstract class LoaderManager {
     ctor public LoaderManager();
     method public abstract void destroyLoader(int);
@@ -3667,6 +3870,10 @@ package android.app {
     method public void notify(java.lang.String, int, android.app.Notification);
   }
 
+  public abstract interface OnActivityPausedListener {
+    method public abstract void onPaused(android.app.Activity);
+  }
+
   public final class PendingIntent implements android.os.Parcelable {
     method public void cancel();
     method public int describeContents();
@@ -3727,6 +3934,18 @@ package android.app {
     method public static android.app.ProgressDialog show(android.content.Context, java.lang.CharSequence, java.lang.CharSequence, boolean, boolean, android.content.DialogInterface.OnCancelListener);
     field public static final int STYLE_HORIZONTAL = 1; // 0x1
     field public static final int STYLE_SPINNER = 0; // 0x0
+  }
+
+  public class ResultInfo implements android.os.Parcelable {
+    ctor public ResultInfo(java.lang.String, int, int, android.content.Intent);
+    ctor public ResultInfo(android.os.Parcel);
+    method public int describeContents();
+    method public void writeToParcel(android.os.Parcel, int);
+    field public static final android.os.Parcelable.Creator CREATOR;
+    field public final android.content.Intent mData;
+    field public final int mRequestCode;
+    field public final int mResultCode;
+    field public final java.lang.String mResultWho;
   }
 
   public class SearchManager implements android.content.DialogInterface.OnCancelListener android.content.DialogInterface.OnDismissListener {
@@ -5285,6 +5504,38 @@ package android.content {
     method public abstract void reset();
   }
 
+  public abstract interface IContentProvider implements android.os.IInterface {
+    method public abstract android.content.ContentProviderResult[] applyBatch(java.util.ArrayList<android.content.ContentProviderOperation>) throws android.content.OperationApplicationException, android.os.RemoteException;
+    method public abstract int bulkInsert(android.net.Uri, android.content.ContentValues[]) throws android.os.RemoteException;
+    method public abstract android.os.Bundle call(java.lang.String, java.lang.String, android.os.Bundle) throws android.os.RemoteException;
+    method public abstract int delete(android.net.Uri, java.lang.String, java.lang.String[]) throws android.os.RemoteException;
+    method public abstract java.lang.String[] getStreamTypes(android.net.Uri, java.lang.String) throws android.os.RemoteException;
+    method public abstract java.lang.String getType(android.net.Uri) throws android.os.RemoteException;
+    method public abstract android.net.Uri insert(android.net.Uri, android.content.ContentValues) throws android.os.RemoteException;
+    method public abstract android.content.res.AssetFileDescriptor openAssetFile(android.net.Uri, java.lang.String) throws java.io.FileNotFoundException, android.os.RemoteException;
+    method public abstract android.os.ParcelFileDescriptor openFile(android.net.Uri, java.lang.String) throws java.io.FileNotFoundException, android.os.RemoteException;
+    method public abstract android.content.res.AssetFileDescriptor openTypedAssetFile(android.net.Uri, java.lang.String, android.os.Bundle) throws java.io.FileNotFoundException, android.os.RemoteException;
+    method public abstract android.database.Cursor query(android.net.Uri, java.lang.String[], java.lang.String, java.lang.String[], java.lang.String) throws android.os.RemoteException;
+    method public abstract int update(android.net.Uri, android.content.ContentValues, java.lang.String, java.lang.String[]) throws android.os.RemoteException;
+    field public static final int APPLY_BATCH_TRANSACTION = 20; // 0x14
+    field public static final int BULK_INSERT_TRANSACTION = 13; // 0xd
+    field public static final int CALL_TRANSACTION = 21; // 0x15
+    field public static final int DELETE_TRANSACTION = 4; // 0x4
+    field public static final int GET_STREAM_TYPES_TRANSACTION = 22; // 0x16
+    field public static final int GET_TYPE_TRANSACTION = 2; // 0x2
+    field public static final int INSERT_TRANSACTION = 3; // 0x3
+    field public static final int OPEN_ASSET_FILE_TRANSACTION = 15; // 0xf
+    field public static final int OPEN_FILE_TRANSACTION = 14; // 0xe
+    field public static final int OPEN_TYPED_ASSET_FILE_TRANSACTION = 23; // 0x17
+    field public static final int QUERY_TRANSACTION = 1; // 0x1
+    field public static final int UPDATE_TRANSACTION = 10; // 0xa
+    field public static final java.lang.String descriptor = "android.content.IContentProvider";
+  }
+
+  public abstract interface IIntentReceiver implements android.os.IInterface {
+    method public abstract void performReceive(android.content.Intent, int, java.lang.String, android.os.Bundle, boolean, boolean) throws android.os.RemoteException;
+  }
+
   public class Intent implements java.lang.Cloneable android.os.Parcelable {
     ctor public Intent();
     ctor public Intent(android.content.Intent);
@@ -6085,6 +6336,111 @@ package android.content.pm {
     field public int reqGlEsVersion;
   }
 
+  public abstract interface IPackageDataObserver implements android.os.IInterface {
+    method public abstract void onRemoveCompleted(java.lang.String, boolean) throws android.os.RemoteException;
+  }
+
+  public abstract interface IPackageDeleteObserver implements android.os.IInterface {
+    method public abstract void packageDeleted(java.lang.String, int) throws android.os.RemoteException;
+  }
+
+  public abstract interface IPackageInstallObserver implements android.os.IInterface {
+    method public abstract void packageInstalled(java.lang.String, int) throws android.os.RemoteException;
+  }
+
+  public abstract interface IPackageManager implements android.os.IInterface {
+    method public abstract void addPackageToPreferred(java.lang.String) throws android.os.RemoteException;
+    method public abstract boolean addPermission(android.content.pm.PermissionInfo) throws android.os.RemoteException;
+    method public abstract boolean addPermissionAsync(android.content.pm.PermissionInfo) throws android.os.RemoteException;
+    method public abstract void addPreferredActivity(android.content.IntentFilter, int, android.content.ComponentName[], android.content.ComponentName) throws android.os.RemoteException;
+    method public abstract java.lang.String[] canonicalToCurrentPackageNames(java.lang.String[]) throws android.os.RemoteException;
+    method public abstract int checkPermission(java.lang.String, java.lang.String) throws android.os.RemoteException;
+    method public abstract int checkSignatures(java.lang.String, java.lang.String) throws android.os.RemoteException;
+    method public abstract int checkUidPermission(java.lang.String, int) throws android.os.RemoteException;
+    method public abstract int checkUidSignatures(int, int) throws android.os.RemoteException;
+    method public abstract void clearApplicationUserData(java.lang.String, android.content.pm.IPackageDataObserver) throws android.os.RemoteException;
+    method public abstract void clearPackagePreferredActivities(java.lang.String) throws android.os.RemoteException;
+    method public abstract android.content.pm.UserInfo createUser(java.lang.String, int) throws android.os.RemoteException;
+    method public abstract java.lang.String[] currentToCanonicalPackageNames(java.lang.String[]) throws android.os.RemoteException;
+    method public abstract void deleteApplicationCacheFiles(java.lang.String, android.content.pm.IPackageDataObserver) throws android.os.RemoteException;
+    method public abstract void deletePackage(java.lang.String, android.content.pm.IPackageDeleteObserver, int) throws android.os.RemoteException;
+    method public abstract void enterSafeMode() throws android.os.RemoteException;
+    method public abstract void finishPackageInstall(int) throws android.os.RemoteException;
+    method public abstract void freeStorage(long, android.content.IntentSender) throws android.os.RemoteException;
+    method public abstract void freeStorageAndNotify(long, android.content.pm.IPackageDataObserver) throws android.os.RemoteException;
+    method public abstract android.content.pm.ActivityInfo getActivityInfo(android.content.ComponentName, int) throws android.os.RemoteException;
+    method public abstract java.util.List<android.content.pm.PermissionGroupInfo> getAllPermissionGroups(int) throws android.os.RemoteException;
+    method public abstract int getApplicationEnabledSetting(java.lang.String) throws android.os.RemoteException;
+    method public abstract android.content.pm.ApplicationInfo getApplicationInfo(java.lang.String, int) throws android.os.RemoteException;
+    method public abstract int getComponentEnabledSetting(android.content.ComponentName) throws android.os.RemoteException;
+    method public abstract int getInstallLocation() throws android.os.RemoteException;
+    method public abstract android.content.pm.ParceledListSlice getInstalledApplications(int, java.lang.String) throws android.os.RemoteException;
+    method public abstract android.content.pm.ParceledListSlice getInstalledPackages(int, java.lang.String) throws android.os.RemoteException;
+    method public abstract java.util.List<android.content.pm.PackageInfo> getInstalledThemePackages() throws android.os.RemoteException;
+    method public abstract java.lang.String getInstallerPackageName(java.lang.String) throws android.os.RemoteException;
+    method public abstract android.content.pm.InstrumentationInfo getInstrumentationInfo(android.content.ComponentName, int) throws android.os.RemoteException;
+    method public abstract java.lang.String getNameForUid(int) throws android.os.RemoteException;
+    method public abstract int[] getPackageGids(java.lang.String) throws android.os.RemoteException;
+    method public abstract android.content.pm.PackageInfo getPackageInfo(java.lang.String, int) throws android.os.RemoteException;
+    method public abstract void getPackageSizeInfo(java.lang.String, android.content.pm.IPackageStatsObserver) throws android.os.RemoteException;
+    method public abstract int getPackageUid(java.lang.String) throws android.os.RemoteException;
+    method public abstract java.lang.String[] getPackagesForUid(int) throws android.os.RemoteException;
+    method public abstract android.content.pm.PermissionGroupInfo getPermissionGroupInfo(java.lang.String, int) throws android.os.RemoteException;
+    method public abstract android.content.pm.PermissionInfo getPermissionInfo(java.lang.String, int) throws android.os.RemoteException;
+    method public abstract java.util.List<android.content.pm.ApplicationInfo> getPersistentApplications(int) throws android.os.RemoteException;
+    method public abstract int getPreferredActivities(java.util.List<android.content.IntentFilter>, java.util.List<android.content.ComponentName>, java.lang.String) throws android.os.RemoteException;
+    method public abstract java.util.List<android.content.pm.PackageInfo> getPreferredPackages(int) throws android.os.RemoteException;
+    method public abstract android.content.pm.ProviderInfo getProviderInfo(android.content.ComponentName, int) throws android.os.RemoteException;
+    method public abstract android.content.pm.ActivityInfo getReceiverInfo(android.content.ComponentName, int) throws android.os.RemoteException;
+    method public abstract android.content.pm.ServiceInfo getServiceInfo(android.content.ComponentName, int) throws android.os.RemoteException;
+    method public abstract android.content.pm.FeatureInfo[] getSystemAvailableFeatures() throws android.os.RemoteException;
+    method public abstract java.lang.String[] getSystemSharedLibraryNames() throws android.os.RemoteException;
+    method public abstract int getUidForSharedUser(java.lang.String) throws android.os.RemoteException;
+    method public abstract android.content.pm.VerifierDeviceIdentity getVerifierDeviceIdentity() throws android.os.RemoteException;
+    method public abstract boolean hasSystemFeature(java.lang.String) throws android.os.RemoteException;
+    method public abstract boolean hasSystemUidErrors() throws android.os.RemoteException;
+    method public abstract void installPackage(android.net.Uri, android.content.pm.IPackageInstallObserver, int, java.lang.String) throws android.os.RemoteException;
+    method public abstract void installPackageWithVerification(android.net.Uri, android.content.pm.IPackageInstallObserver, int, java.lang.String, android.net.Uri, android.content.pm.ManifestDigest) throws android.os.RemoteException;
+    method public abstract boolean isFirstBoot() throws android.os.RemoteException;
+    method public abstract boolean isProtectedBroadcast(java.lang.String) throws android.os.RemoteException;
+    method public abstract boolean isSafeMode() throws android.os.RemoteException;
+    method public abstract void movePackage(java.lang.String, android.content.pm.IPackageMoveObserver, int) throws android.os.RemoteException;
+    method public abstract java.lang.String nextPackageToClean(java.lang.String) throws android.os.RemoteException;
+    method public abstract void performBootDexOpt() throws android.os.RemoteException;
+    method public abstract boolean performDexOpt(java.lang.String) throws android.os.RemoteException;
+    method public abstract java.util.List<android.content.pm.ProviderInfo> queryContentProviders(java.lang.String, int, int) throws android.os.RemoteException;
+    method public abstract java.util.List<android.content.pm.InstrumentationInfo> queryInstrumentation(java.lang.String, int) throws android.os.RemoteException;
+    method public abstract java.util.List<android.content.pm.ResolveInfo> queryIntentActivities(android.content.Intent, java.lang.String, int) throws android.os.RemoteException;
+    method public abstract java.util.List<android.content.pm.ResolveInfo> queryIntentActivityOptions(android.content.ComponentName, android.content.Intent[], java.lang.String[], android.content.Intent, java.lang.String, int) throws android.os.RemoteException;
+    method public abstract java.util.List<android.content.pm.ResolveInfo> queryIntentReceivers(android.content.Intent, java.lang.String, int) throws android.os.RemoteException;
+    method public abstract java.util.List<android.content.pm.ResolveInfo> queryIntentServices(android.content.Intent, java.lang.String, int) throws android.os.RemoteException;
+    method public abstract java.util.List<android.content.pm.PermissionInfo> queryPermissionsByGroup(java.lang.String, int) throws android.os.RemoteException;
+    method public abstract void querySyncProviders(java.util.List<java.lang.String>, java.util.List<android.content.pm.ProviderInfo>) throws android.os.RemoteException;
+    method public abstract void removePackageFromPreferred(java.lang.String) throws android.os.RemoteException;
+    method public abstract void removePermission(java.lang.String) throws android.os.RemoteException;
+    method public abstract boolean removeUser(int) throws android.os.RemoteException;
+    method public abstract void replacePreferredActivity(android.content.IntentFilter, int, android.content.ComponentName[], android.content.ComponentName) throws android.os.RemoteException;
+    method public abstract android.content.pm.ProviderInfo resolveContentProvider(java.lang.String, int) throws android.os.RemoteException;
+    method public abstract android.content.pm.ResolveInfo resolveIntent(android.content.Intent, java.lang.String, int) throws android.os.RemoteException;
+    method public abstract android.content.pm.ResolveInfo resolveService(android.content.Intent, java.lang.String, int) throws android.os.RemoteException;
+    method public abstract void setApplicationEnabledSetting(java.lang.String, int, int) throws android.os.RemoteException;
+    method public abstract void setComponentEnabledSetting(android.content.ComponentName, int, int) throws android.os.RemoteException;
+    method public abstract boolean setInstallLocation(int) throws android.os.RemoteException;
+    method public abstract void setInstallerPackageName(java.lang.String, java.lang.String) throws android.os.RemoteException;
+    method public abstract void setPackageStoppedState(java.lang.String, boolean) throws android.os.RemoteException;
+    method public abstract void systemReady() throws android.os.RemoteException;
+    method public abstract void updateExternalMediaStatus(boolean, boolean) throws android.os.RemoteException;
+    method public abstract void verifyPendingInstall(int, int) throws android.os.RemoteException;
+  }
+
+  public abstract interface IPackageMoveObserver implements android.os.IInterface {
+    method public abstract void packageMoved(java.lang.String, int) throws android.os.RemoteException;
+  }
+
+  public abstract interface IPackageStatsObserver implements android.os.IInterface {
+    method public abstract void onGetStatsCompleted(android.content.pm.PackageStats, boolean) throws android.os.RemoteException;
+  }
+
   public class InstrumentationInfo extends android.content.pm.PackageItemInfo implements android.os.Parcelable {
     ctor public InstrumentationInfo();
     ctor public InstrumentationInfo(android.content.pm.InstrumentationInfo);
@@ -6109,6 +6465,12 @@ package android.content.pm {
     method public java.lang.String getSourcePackage();
     method public android.graphics.drawable.Drawable loadIcon(android.content.pm.PackageManager);
     method public java.lang.CharSequence loadLabel(android.content.pm.PackageManager);
+    field public static final android.os.Parcelable.Creator CREATOR;
+  }
+
+  public class ManifestDigest implements android.os.Parcelable {
+    method public int describeContents();
+    method public void writeToParcel(android.os.Parcel, int);
     field public static final android.os.Parcelable.Creator CREATOR;
   }
 
@@ -6327,6 +6689,17 @@ package android.content.pm {
     field public java.lang.String packageName;
   }
 
+  public class ParceledListSlice implements android.os.Parcelable {
+    ctor public ParceledListSlice();
+    method public boolean append(T);
+    method public int describeContents();
+    method public boolean isLastSlice();
+    method public T populateList(java.util.List<T>, android.os.Parcelable.Creator<T>);
+    method public void setLastSlice(boolean);
+    method public void writeToParcel(android.os.Parcel, int);
+    field public static final android.os.Parcelable.Creator CREATOR;
+  }
+
   public class PathPermission extends android.os.PatternMatcher {
     ctor public PathPermission(java.lang.String, int, java.lang.String, java.lang.String);
     ctor public PathPermission(android.os.Parcel);
@@ -6428,6 +6801,33 @@ package android.content.pm {
     field public static final android.os.Parcelable.Creator CREATOR;
   }
 
+  public class UserInfo implements android.os.Parcelable {
+    ctor public UserInfo(int, java.lang.String, int);
+    ctor public UserInfo();
+    ctor public UserInfo(android.content.pm.UserInfo);
+    method public int describeContents();
+    method public boolean isAdmin();
+    method public boolean isGuest();
+    method public boolean isPrimary();
+    method public void writeToParcel(android.os.Parcel, int);
+    field public static final android.os.Parcelable.Creator CREATOR;
+    field public static final int FLAG_ADMIN = 2; // 0x2
+    field public static final int FLAG_GUEST = 4; // 0x4
+    field public static final int FLAG_PRIMARY = 1; // 0x1
+    field public int flags;
+    field public int id;
+    field public java.lang.String name;
+  }
+
+  public class VerifierDeviceIdentity implements android.os.Parcelable {
+    ctor public VerifierDeviceIdentity(long);
+    method public int describeContents();
+    method public static android.content.pm.VerifierDeviceIdentity generate();
+    method public static android.content.pm.VerifierDeviceIdentity parse(java.lang.String) throws java.lang.IllegalArgumentException;
+    method public void writeToParcel(android.os.Parcel, int);
+    field public static final android.os.Parcelable.Creator CREATOR;
+  }
+
 }
 
 package android.content.res {
@@ -6456,7 +6856,7 @@ package android.content.res {
     ctor public AssetFileDescriptor.AutoCloseOutputStream(android.content.res.AssetFileDescriptor) throws java.io.IOException;
   }
 
-  public final class AssetManager {
+  public final class AssetManager extends android.util.ExtendedPropertiesUtils {
     method public void close();
     method public final java.lang.String[] getLocales();
     method public final java.lang.String[] list(java.lang.String) throws java.io.IOException;
@@ -6499,7 +6899,46 @@ package android.content.res {
     field public static final android.os.Parcelable.Creator CREATOR;
   }
 
-  public final class Configuration implements java.lang.Comparable android.os.Parcelable {
+  public class CompatibilityInfo implements android.os.Parcelable {
+    ctor public CompatibilityInfo(android.content.pm.ApplicationInfo, int, int, boolean);
+    method public boolean alwaysSupportsScreen();
+    method public void applyToConfiguration(android.content.res.Configuration);
+    method public void applyToDisplayMetrics(android.util.DisplayMetrics);
+    method public static float computeCompatibleScaling(android.util.DisplayMetrics, android.util.DisplayMetrics);
+    method public int describeContents();
+    method public android.content.res.CompatibilityInfo.Translator getTranslator();
+    method public boolean isScalingRequired();
+    method public boolean neverSupportsScreen();
+    method public boolean supportsScreen();
+    method public void writeToParcel(android.os.Parcel, int);
+    field public static final android.os.Parcelable.Creator CREATOR;
+    field public static final android.content.res.CompatibilityInfo DEFAULT_COMPATIBILITY_INFO;
+    field public static final int DEFAULT_NORMAL_SHORT_DIMENSION = 320; // 0x140
+    field public static final float MAXIMUM_ASPECT_RATIO = 1.7791667f;
+    field public final int applicationDensity;
+    field public final float applicationInvertedScale;
+    field public final float applicationScale;
+    field public final boolean isThemeable;
+  }
+
+  public class CompatibilityInfo.Translator {
+    method public android.graphics.Rect getTranslatedContentInsets(android.graphics.Rect);
+    method public android.graphics.Region getTranslatedTouchableArea(android.graphics.Region);
+    method public android.graphics.Rect getTranslatedVisibleInsets(android.graphics.Rect);
+    method public void translateCanvas(android.graphics.Canvas);
+    method public void translateEventInScreenToAppWindow(android.view.MotionEvent);
+    method public void translateLayoutParamsInAppWindowToScreen(android.view.WindowManager.LayoutParams);
+    method public void translatePointInScreenToAppWindow(android.graphics.PointF);
+    method public void translateRectInAppWindowToScreen(android.graphics.Rect);
+    method public void translateRectInScreenToAppWinFrame(android.graphics.Rect);
+    method public void translateRectInScreenToAppWindow(android.graphics.Rect);
+    method public void translateRegionInWindowToScreen(android.graphics.Region);
+    method public void translateWindowLayout(android.view.WindowManager.LayoutParams);
+    field public final float applicationInvertedScale;
+    field public final float applicationScale;
+  }
+
+  public final class Configuration extends android.util.ExtendedPropertiesUtils implements java.lang.Comparable android.os.Parcelable {
     ctor public Configuration();
     ctor public Configuration(android.content.res.Configuration);
     method public int compareTo(android.content.res.Configuration);
@@ -6508,6 +6947,7 @@ package android.content.res {
     method public boolean equals(android.content.res.Configuration);
     method public boolean isLayoutSizeAtLeast(int);
     method public static boolean needNewResources(int, int);
+    method public void paranoidHook();
     method public void readFromParcel(android.os.Parcel);
     method public void setTo(android.content.res.Configuration);
     method public void setToDefaults();
@@ -6563,6 +7003,7 @@ package android.content.res {
     field public static final int UI_MODE_TYPE_NORMAL = 1; // 0x1
     field public static final int UI_MODE_TYPE_TELEVISION = 4; // 0x4
     field public static final int UI_MODE_TYPE_UNDEFINED = 0; // 0x0
+    field public boolean active;
     field public float fontScale;
     field public int hardKeyboardHidden;
     field public int keyboard;
@@ -6596,7 +7037,19 @@ package android.content.res {
     method public static android.content.res.ObbInfo getObbInfo(java.lang.String) throws java.io.IOException;
   }
 
-  public class Resources {
+  public class PackageRedirectionMap implements android.os.Parcelable {
+    ctor public PackageRedirectionMap();
+    method public void addRedirection(int, int);
+    method public int describeContents();
+    method public int getNativePointer();
+    method public int getPackageId();
+    method public int[] getRedirectionKeys();
+    method public int lookupRedirection(int);
+    method public void writeToParcel(android.os.Parcel, int);
+    field public static final android.os.Parcelable.Creator CREATOR;
+  }
+
+  public class Resources extends android.util.ExtendedPropertiesUtils {
     ctor public Resources(android.content.res.AssetManager, android.util.DisplayMetrics, android.content.res.Configuration);
     method public final void finishPreloading();
     method public final void flushLayoutCache();
@@ -6642,6 +7095,7 @@ package android.content.res {
     method public java.io.InputStream openRawResource(int) throws android.content.res.Resources.NotFoundException;
     method public java.io.InputStream openRawResource(int, android.util.TypedValue) throws android.content.res.Resources.NotFoundException;
     method public android.content.res.AssetFileDescriptor openRawResourceFd(int) throws android.content.res.Resources.NotFoundException;
+    method public void paranoidHook();
     method public void parseBundleExtra(java.lang.String, android.util.AttributeSet, android.os.Bundle) throws org.xmlpull.v1.XmlPullParserException;
     method public void parseBundleExtras(android.content.res.XmlResourceParser, android.os.Bundle) throws java.io.IOException, org.xmlpull.v1.XmlPullParserException;
     method public void updateConfiguration(android.content.res.Configuration, android.util.DisplayMetrics);
@@ -17582,6 +18036,7 @@ package android.provider {
     field public static final java.lang.String TEXT_SHOW_PASSWORD = "show_password";
     field public static final java.lang.String TIME_12_24 = "time_12_24";
     field public static final java.lang.String TRANSITION_ANIMATION_SCALE = "transition_animation_scale";
+    field public static final java.lang.String UI_FORCE_OVERFLOW_BUTTON = "ui_force_overflow_button";
     field public static final deprecated java.lang.String USB_MASS_STORAGE_ENABLED = "usb_mass_storage_enabled";
     field public static final java.lang.String USER_ROTATION = "user_rotation";
     field public static final deprecated java.lang.String USE_GOOGLE_MAIL = "use_google_mail";
@@ -21379,8 +21834,9 @@ package android.util {
     method public static boolean isObjectSelected(java.lang.Object);
   }
 
-  public class DisplayMetrics {
+  public class DisplayMetrics extends android.util.ExtendedPropertiesUtils {
     ctor public DisplayMetrics();
+    method public void paranoidHook();
     method public void setTo(android.util.DisplayMetrics);
     method public void setToDefaults();
     field public static final int DENSITY_DEFAULT = 160; // 0xa0
@@ -21426,6 +21882,66 @@ package android.util {
   public static class EventLogTags.Description {
     field public final java.lang.String mName;
     field public final int mTag;
+  }
+
+  public class ExtendedPropertiesUtils {
+    ctor public ExtendedPropertiesUtils();
+    method public static void fillArray();
+    method public static android.content.pm.ApplicationInfo getAppInfoFromPID(int);
+    method public static android.content.pm.ApplicationInfo getAppInfoFromPackageName(java.lang.String);
+    method public static android.content.pm.ApplicationInfo getAppInfoFromPath(java.lang.String);
+    method public static java.lang.String getFixedProperty(java.lang.String, java.lang.String);
+    method public static java.lang.String getProperty(java.lang.String);
+    method public static java.lang.String getProperty(java.lang.String, java.lang.String);
+    method public static boolean isParsableToInt(java.lang.String);
+    method public static void paranoidConfigure(android.util.ExtendedPropertiesUtils.ParanoidAppInfo);
+    method public boolean paranoidGetActive();
+    method public float paranoidGetDensity();
+    method public int paranoidGetDpi();
+    method public boolean paranoidGetForce();
+    method public android.content.pm.ApplicationInfo paranoidGetInfo();
+    method public int paranoidGetMode();
+    method public java.lang.String paranoidGetName();
+    method public java.lang.String paranoidGetPath();
+    method public int paranoidGetPid();
+    method public float paranoidGetScaledDensity();
+    method public int paranoidGetScreenHeightDp();
+    method public int paranoidGetScreenLayout();
+    method public int paranoidGetScreenWidthDp();
+    method public static boolean paranoidIsHooked();
+    method public static boolean paranoidIsInitialized();
+    method public void paranoidLog(java.lang.String);
+    method public boolean paranoidOverride(android.content.pm.ApplicationInfo);
+    method public boolean paranoidOverride(java.lang.String);
+    method public boolean paranoidOverride(android.util.ExtendedPropertiesUtils);
+    method public static java.lang.String paranoidStatus();
+    method public void paranoidTrace(java.lang.String);
+    method public static java.lang.String readFile(java.lang.String);
+    field public static final java.lang.String PARANOID_PROPIERTIES = "/system/pad.prop";
+    field public static java.util.ArrayList mExcludedList;
+    field public static android.content.Context mParanoidContext;
+    field public static android.util.ExtendedPropertiesUtils.ParanoidAppInfo mParanoidGlobalHook;
+    field public android.util.ExtendedPropertiesUtils.ParanoidAppInfo mParanoidLocalHook;
+    field public static android.app.ActivityThread mParanoidMainThread;
+    field public static java.util.List mParanoidPackageList;
+    field public static android.content.pm.PackageManager mParanoidPackageManager;
+  }
+
+  public static class ExtendedPropertiesUtils.ParanoidAppInfo {
+    ctor public ExtendedPropertiesUtils.ParanoidAppInfo();
+    field public boolean Active;
+    field public float Density;
+    field public int Dpi;
+    field public boolean Force;
+    field public android.content.pm.ApplicationInfo Info;
+    field public int Mode;
+    field public java.lang.String Name;
+    field public java.lang.String Path;
+    field public int Pid;
+    field public float ScaledDensity;
+    field public int ScreenHeightDp;
+    field public int ScreenLayout;
+    field public int ScreenWidthDp;
   }
 
   public class FloatMath {
@@ -21832,6 +22348,13 @@ package android.view {
   public abstract interface CollapsibleActionView {
     method public abstract void onActionViewCollapsed();
     method public abstract void onActionViewExpanded();
+  }
+
+  public class CompatibilityInfoHolder {
+    ctor public CompatibilityInfoHolder();
+    method public android.content.res.CompatibilityInfo get();
+    method public android.content.res.CompatibilityInfo getIfNeeded();
+    method public void set(android.content.res.CompatibilityInfo);
   }
 
   public abstract interface ContextMenu implements android.view.Menu {
@@ -27734,6 +28257,16 @@ package android.widget {
     method public void setOnZoomOutClickListener(android.view.View.OnClickListener);
     method public void setZoomSpeed(long);
     method public void show();
+  }
+
+}
+
+package com.android.internal.app {
+
+  public abstract interface IAssetRedirectionManager implements android.os.IInterface {
+    method public abstract void clearPackageRedirectionMap(java.lang.String) throws android.os.RemoteException;
+    method public abstract void clearRedirectionMapsByTheme(java.lang.String, java.lang.String) throws android.os.RemoteException;
+    method public abstract android.content.res.PackageRedirectionMap getPackageRedirectionMap(java.lang.String, java.lang.String, java.lang.String) throws android.os.RemoteException;
   }
 
 }

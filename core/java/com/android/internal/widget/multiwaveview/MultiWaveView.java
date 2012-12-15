@@ -29,6 +29,7 @@ import android.graphics.Canvas;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.os.Vibrator;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -133,6 +134,7 @@ public class MultiWaveView extends View {
     private TargetDrawable mOuterRing;
     private Vibrator mVibrator;
 
+    private boolean mVibrationEnabled = true;
     private int mFeedbackCount = 3;
     private int mVibrationDuration = 0;
     private int mGrabbedState;
@@ -195,6 +197,7 @@ public class MultiWaveView extends View {
     public MultiWaveView(Context context, AttributeSet attrs) {
         super(context, attrs);
         Resources res = context.getResources();
+	mVibrationEnabled = Settings.System.getInt(context.getContentResolver(), Settings.System.LOCKSCREEN_VIBRATION, 1) == 1;
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.MultiWaveView);
         mOuterRadius = a.getDimension(R.styleable.MultiWaveView_outerRadius, mOuterRadius);
@@ -255,7 +258,7 @@ public class MultiWaveView extends View {
         }
 
         a.recycle();
-        setVibrateEnabled(mVibrationDuration > 0);
+        setVibrateEnabled(mVibrationDuration > 0 && mVibrationEnabled);
     }
 
     private void dump() {

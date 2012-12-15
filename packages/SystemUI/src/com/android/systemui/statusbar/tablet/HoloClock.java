@@ -71,6 +71,7 @@ public class HoloClock extends FrameLayout {
 
     private int mAmPmStyle;
     private boolean mShowClock;
+    private boolean mShowAlways;
 
     Handler mHandler;
 
@@ -102,6 +103,9 @@ public class HoloClock extends FrameLayout {
 
     public HoloClock(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.HoloClock, defStyle, 0);
+        mShowAlways = a.getBoolean(R.styleable.HoloClock_showAlways, false);
 
         mHandler = new Handler();
         SettingsObserver settingsObserver = new SettingsObserver(mHandler);
@@ -285,10 +289,9 @@ public class HoloClock extends FrameLayout {
         mShowClock = (Settings.System.getInt(resolver,
                 Settings.System.STATUS_BAR_CLOCK, 1) == 1);
 
-        if(mShowClock)
+        if(mShowClock || mShowAlways)
             setVisibility(View.VISIBLE);
         else
             setVisibility(View.GONE);
     }
 }
-
