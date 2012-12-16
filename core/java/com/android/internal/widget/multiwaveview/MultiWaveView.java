@@ -197,7 +197,7 @@ public class MultiWaveView extends View {
     public MultiWaveView(Context context, AttributeSet attrs) {
         super(context, attrs);
         Resources res = context.getResources();
-	mVibrationEnabled = Settings.System.getInt(context.getContentResolver(), Settings.System.LOCKSCREEN_VIBRATION, 1) == 1;
+        mVibrationEnabled = Settings.System.getInt(context.getContentResolver(), Settings.System.LOCKSCREEN_VIBRATION, 1) == 1;
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.MultiWaveView);
         mOuterRadius = a.getDimension(R.styleable.MultiWaveView_outerRadius, mOuterRadius);

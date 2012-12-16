@@ -445,32 +445,32 @@ public class RecentsPanelView extends RelativeLayout implements OnItemClickListe
 
         // Display Reflection
         if(mSenseRecent && h.thumbnailViewImage != null){
-                final int reflectionGap = 4;
-                int width = thumbnail.getWidth();
-                int height = thumbnail.getHeight();
+            final int reflectionGap = 4;
+            int width = thumbnail.getWidth();
+            int height = thumbnail.getHeight();
 
-                Matrix matrix = new Matrix();
-                matrix.preScale(1, -1);
+            Matrix matrix = new Matrix();
+            matrix.preScale(1, -1);
 
-                Bitmap reflectionImage = Bitmap.createBitmap(thumbnail, 0, height * 2 / 3, width, height/3, matrix, false);	    
-                Bitmap bitmapWithReflection = Bitmap.createBitmap(width, (height + height/3), Config.ARGB_8888);
+            Bitmap reflectionImage = Bitmap.createBitmap(thumbnail, 0, height * 2 / 3, width, height/3, matrix, false);	    
+            Bitmap bitmapWithReflection = Bitmap.createBitmap(width, (height + height/3), Config.ARGB_8888);
 
-                Canvas canvas = new Canvas(bitmapWithReflection);
-                canvas.drawBitmap(thumbnail, 0, 0, null);
-                Paint defaultPaint = new Paint();
-                canvas.drawRect(0, height, width, height + reflectionGap, defaultPaint);
-                canvas.drawBitmap(reflectionImage, 0, height + reflectionGap, null);
+            Canvas canvas = new Canvas(bitmapWithReflection);
+            canvas.drawBitmap(thumbnail, 0, 0, null);
+            Paint defaultPaint = new Paint();
+            canvas.drawRect(0, height, width, height + reflectionGap, defaultPaint);
+            canvas.drawBitmap(reflectionImage, 0, height + reflectionGap, null);
 
-                Paint paint = new Paint(); 
-                LinearGradient shader = new LinearGradient(0, thumbnail.getHeight(), 0, 
-                  bitmapWithReflection.getHeight() + reflectionGap, 0x70ffffff, 0x00ffffff, 
-                  TileMode.CLAMP); 
-                paint.setShader(shader); 
-                paint.setXfermode(new PorterDuffXfermode(Mode.DST_IN)); 
-                canvas.drawRect(0, height, width, 
-                  bitmapWithReflection.getHeight() + reflectionGap, paint); 
+            Paint paint = new Paint(); 
+            LinearGradient shader = new LinearGradient(0, thumbnail.getHeight(), 0, 
+              bitmapWithReflection.getHeight() + reflectionGap, 0x70ffffff, 0x00ffffff, 
+              TileMode.CLAMP); 
+            paint.setShader(shader); 
+            paint.setXfermode(new PorterDuffXfermode(Mode.DST_IN)); 
+            canvas.drawRect(0, height, width, 
+              bitmapWithReflection.getHeight() + reflectionGap, paint); 
 
-                h.thumbnailViewImage.setImageBitmap(bitmapWithReflection);
+            h.thumbnailViewImage.setImageBitmap(bitmapWithReflection);
         }
         else
                 h.thumbnailViewImage.setImageBitmap(thumbnail);

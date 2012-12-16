@@ -68,7 +68,7 @@ public class RecentTasksLoader {
         mContext = context;
 
         final Resources res = context.getResources();
-	mSenseRecent = Settings.System.getInt(mContext.getContentResolver(), Settings.System.SENSE_RECENT, 0) == 1;
+        mSenseRecent = Settings.System.getInt(mContext.getContentResolver(), Settings.System.SENSE_RECENT, 0) == 1;
 
         // get the icon size we want -- on tablets, we use bigger icons
         boolean isTablet = res.getBoolean(R.bool.config_recents_interface_for_tablets);

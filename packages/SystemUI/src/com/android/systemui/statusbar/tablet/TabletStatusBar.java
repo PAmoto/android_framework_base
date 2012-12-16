@@ -244,7 +244,7 @@ public class TabletStatusBar extends StatusBar implements
         final Context context = mContext;
         final Resources res = mContext.getResources();
 
-	mConfigHandler = new Handler();
+        mConfigHandler = new Handler();
         SettingsObserver settingsObserver = new SettingsObserver(mConfigHandler);
         settingsObserver.observe();
 
@@ -655,7 +655,7 @@ public class TabletStatusBar extends StatusBar implements
         });
 
         mUseTabletSoftKeys = Settings.System.getInt(mContext.getContentResolver(), Settings.System.SOFT_KEYS, mContext.getResources().getBoolean(com.android.internal.R.bool.config_showNavigationBar) ? 1 : 0) == 1;
-	mNavigationArea.setVisibility(mUseTabletSoftKeys ? View.VISIBLE : View.GONE);
+        mNavigationArea.setVisibility(mUseTabletSoftKeys ? View.VISIBLE : View.GONE);
 
         LayoutTransition lt = new LayoutTransition();
         lt.setDuration(250);

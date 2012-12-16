@@ -2395,49 +2395,49 @@ public final class Settings {
          */
         public static final String STATUS_BAR_IME_SWITCHER = "status_bar_ime_switcher";
 
- 	/**
+        /**
          * StatusBar Transparency
          * @hide
          */
         public static final String STATUS_BAR_TRANSPARENCY = "status_bar_transparency";
 
- 	/**
+        /**
          * StatusBar Hardware Rendering
          * @hide
          */
         public static final String STATUS_BAR_HW_RENDERING = "status_bar_hw_rendering";
 
- 	/**
+        /**
          * Lockscreen Vibration
          * @hide
          */
         public static final String LOCKSCREEN_VIBRATION = "lockscreen_vibration";
 
- 	/**
+        /**
          * Software Keys
          * @hide
          */
         public static final String SOFT_KEYS = "soft_keys";
 
- 	/**
+        /**
          * Sense 4.0 Recent Apps
          * @hide
          */
         public static final String SENSE_RECENT = "sense_recent";
 
- 	/**
+        /**
          * Recent Apps Icons
          * @hide
          */
         public static final String RECENTS_ICON = "recent_icon";
 
- 	/**
+        /**
          * Recent Apps Text Size
          * @hide
          */
         public static final String RECENTS_TEXT_SIZE = "recent_text_size";
 
- 	/**
+        /**
          * Statusbar State
          * @hide
          */
@@ -2645,7 +2645,7 @@ public final class Settings {
          */
         public static final String STATUS_BAR_NOTIF_COUNT = "status_bar_notif_count";
 
-        /*
+        /**
          * Control the display of the action overflow button within app UI.
          * 0 = force off
          * 1 = use system default
