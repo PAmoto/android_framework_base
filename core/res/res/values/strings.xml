@@ -305,6 +305,13 @@
     <!-- Button to turn off the phone, within the Phone Options dialog -->
     <string name="power_off">Power off</string>
 
+    <!-- Restart Progress Dialog message. Shown if the user chooses to restart option -->
+    <string name="restart_progress">Restarting\u2026</string>
+    <!-- Restart Progress Dialog title. Shown if the user chooses to restart the tablet -->
+    <string name="restart_title" product="tablet">Your tablet will restart.</string>
+    <!-- Restart Progress Dialog title. Shown if the user chooses to restart the phone -->
+    <string name="restart_title" product="default">Your phone will restart.</string>
+
     <!-- Button to reboot the phone, within the Phone Options dialog -->
     <string name="reboot_system" product="tablet">Reboot tablet</string>
     <string name="reboot_system" product="default">Reboot phone</string>
@@ -317,6 +324,8 @@
 
     <!-- Button to reboot the phone, within the Reboot Options dialog -->
     <string name="reboot_reboot">Reboot</string>
+    <!-- Button to restart the phone very quickly, within the Reboot Options dialog -->
+    <string name="reboot_restart">Restart</string>
     <!-- Button to reboot the phone into recovery, within the Reboot Options dialog -->
     <string name="reboot_recovery">Recovery</string>
     <!-- Button to reboot the phone into bootloader, within the Reboot Options dialog -->
