@@ -68,7 +68,7 @@ public final class ShutdownThread extends Thread {
     private static Object sIsStartedGuard = new Object();
     private static boolean sIsStarted = false;
 
-	// reboot flags
+    // reboot flags
     private static boolean mReboot;
     private static boolean mRestart;
     private static String mRebootReason;
@@ -314,7 +314,7 @@ public final class ShutdownThread extends Thread {
              * Write a system property in case the system_server reboots before we
              * get to the actual hardware restart. If that happens, we'll retry at
              * the beginning of the SystemServer startup.
-			 */
+             */
             {
                 String reason = (mReboot ? "1" : "0") + (mRebootReason != null ? mRebootReason : "");
                 SystemProperties.set(SHUTDOWN_ACTION_PROPERTY, reason);
