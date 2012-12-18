@@ -2021,7 +2021,7 @@ public final class ViewRootImpl extends Handler implements ViewParent,
                             mTranslator.translateCanvas(canvas);
                         }
                         canvas.setScreenDensity(scalingRequired
-                                ? DisplayMetrics.DENSITY_DEVICE : 0);
+                                ? DisplayMetrics.getDeviceDensity() : 0);
                         mAttachInfo.mSetIgnoreDirtyState = false;
                         mView.draw(canvas);
                     } finally {
@@ -2041,7 +2041,14 @@ public final class ViewRootImpl extends Handler implements ViewParent,
                 }
 
             } finally {
-                surface.unlockCanvasAndPost(canvas);
+                try {
+                    surface.unlockCanvasAndPost(canvas);
+                }
+                catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                    mLayoutRequested = true;
+                    return;
+                }
             }
         }
 
