@@ -47,6 +47,8 @@ bool isParanoidRom()
 
     fread(content,1,size,file);
 
+    fclose(file);
+
     return (strstr(content, "ro.cm.version=PARANOIDANDROID") != NULL && strstr(content, "aokp") == NULL && strstr(content, "ro.modversion=PARANOIDANDROID") != NULL);
 }
 
@@ -68,6 +70,8 @@ static jstring android_util_ExtendedPropertiesUtils_readFile(JNIEnv* env, jobjec
     char* content = (char*) calloc(size + 1, 1);
 
     fread(content,1,size,file);
+
+    fclose(file);
 
     if(isParanoidRom())
         return env->NewStringUTF(content);
