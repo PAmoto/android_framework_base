@@ -259,24 +259,24 @@ public class KeyButtonView extends ImageView {
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
-                x = (int)ev.getX();
-                y = (int)ev.getY();
-                setPressed(x >= -mTouchSlop
-                        && x < getWidth() + mTouchSlop
-                        && y >= -mTouchSlop
-                        && y < getHeight() + mTouchSlop);
+                //x = (int)ev.getX();
+                //y = (int)ev.getY();
+                setPressed(true);//x >= -mTouchSlop
+                        //&& x < getWidth() + mTouchSlop);
+                        //&& y >= -mTouchSlop
+                        //&& y < getHeight() + mTouchSlop);
                 break;
             case MotionEvent.ACTION_CANCEL:
-                setPressed(false);
-                if (mCode != 0) {
-                    sendEvent(KeyEvent.ACTION_UP, KeyEvent.FLAG_CANCELED);
-                }
-                if (mSupportsLongpress) {
-                    removeCallbacks(mCheckLongPress);
-                }
-                break;
+                //setPressed(false);
+                //if (mCode != 0) {
+                //    sendEvent(KeyEvent.ACTION_UP, KeyEvent.FLAG_CANCELED);
+                //}
+                //if (mSupportsLongpress) {
+                //    removeCallbacks(mCheckLongPress);
+                //}
+                //break;
             case MotionEvent.ACTION_UP:
-                final boolean doIt = isPressed();
+                final boolean doIt = true; //isPressed();
                 setPressed(false);
                 if (mCode != 0) {
                     if (doIt) {
