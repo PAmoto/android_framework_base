@@ -90,7 +90,7 @@
          collapse request -->
     <item type="dimen" name="collapse_min_display_fraction">10%</item>
     <!-- Minimum fraction of the display a gesture must travel to qualify as an expand request -->
-    <item type="dimen" name="expand_min_display_fraction">50%</item>
+    <item type="dimen" name="expand_min_display_fraction">65%</item>
 
     <!-- Initial acceleration of an expand animation after fling -->
     <dimen name="expand_accel">2000dp</dimen>
