@@ -31,14 +31,14 @@ import android.util.SparseArray;
 public class ViewConfiguration {
     /**
      * Expected bit depth of the display panel.
-     * 
+     *
      * @hide
      */
     public static final float PANEL_BIT_DEPTH = 24;
 
     /**
      * Minimum alpha required for a view to draw.
-     * 
+     *
      * @hide
      */
     public static final float ALPHA_THRESHOLD = 0.5f / PANEL_BIT_DEPTH;
@@ -72,8 +72,8 @@ public class ViewConfiguration {
      * Defines the duration in milliseconds of the pressed state in child
      * components.
      */
-    private static final int PRESSED_STATE_DURATION = 125;
-    
+    private static final int PRESSED_STATE_DURATION = 64;
+
     /**
      * Defines the default duration in milliseconds before a press turns into
      * a long press
@@ -91,14 +91,14 @@ public class ViewConfiguration {
      * lock screen, etc).
      */
     private static final int GLOBAL_ACTIONS_KEY_TIMEOUT = 500;
-    
+
     /**
-     * Defines the duration in milliseconds we will wait to see if a touch event 
+     * Defines the duration in milliseconds we will wait to see if a touch event
      * is a tap or a scroll. If the user does not move within this interval, it is
-     * considered to be a tap. 
+     * considered to be a tap.
      */
     private static final int TAP_TIMEOUT = 180;
-    
+
     /**
      * Defines the duration in milliseconds we will wait to see if a touch event 
      * is a jump tap. If the user does not complete the jump tap within this interval, it is
@@ -137,7 +137,7 @@ public class ViewConfiguration {
      * Inset in pixels to look for touchable content when the user touches the edge of the screen
      */
     private static final int EDGE_SLOP = 12;
-    
+
     /**
      * Distance a touch can wander before we think the user is scrolling in dips.
      * Note that this value defined here is only used as a fallback by legacy/misbehaving
@@ -150,7 +150,7 @@ public class ViewConfiguration {
      * the characteristics of the touch panel and firmware.
      */
     private static final int TOUCH_SLOP = 8;
-    
+
     /**
      * Distance a touch can wander before we think the user is attempting a paged scroll
      * (in dips)
@@ -164,7 +164,7 @@ public class ViewConfiguration {
      * config_viewConfigurationTouchSlop * 2 when provided with a Context.
      */
     private static final int PAGING_TOUCH_SLOP = TOUCH_SLOP * 2;
-    
+
     /**
      * Distance between the first touch and second touch to still be considered a double tap
      */
@@ -179,12 +179,14 @@ public class ViewConfiguration {
     /**
      * Minimum velocity to initiate a fling, as measured in pixels per second
      */
-    private static final int MINIMUM_FLING_VELOCITY = 50;
-    
+    private static final int MINIMUM_FLING_VELOCITY
+            = SystemProperties.getInt("ro.min.fling_velocity", 50);
+
     /**
      * Maximum velocity to initiate a fling, as measured in pixels per second
      */
-    private static final int MAXIMUM_FLING_VELOCITY = 8000;
+    private static final int MAXIMUM_FLING_VELOCITY
+            = SystemProperties.getInt("ro.max.fling_velocity", 10000);
 
     /**
      * Distance between a touch up event denoting the end of a touch exploration
@@ -206,12 +208,12 @@ public class ViewConfiguration {
      * should be at least equal to the size of the screen in ARGB888 format.
      */
     @Deprecated
-    private static final int MAXIMUM_DRAWING_CACHE_SIZE = 480 * 800 * 4; // ARGB8888
+    private static final int MAXIMUM_DRAWING_CACHE_SIZE = 480 * 854 * 4; // ARGB8888
 
     /**
      * The coefficient of friction applied to flings/scrolls.
      */
-    private static final float SCROLL_FRICTION = 0.015f;
+    private static final float SCROLL_FRICTION = 0.012f;
 
     /**
      * Max distance to overscroll for edge effects
