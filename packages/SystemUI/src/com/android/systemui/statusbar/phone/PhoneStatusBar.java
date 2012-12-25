@@ -1136,7 +1136,7 @@ public class PhoneStatusBar extends StatusBar {
                     + " any=" + any + " clearable=" + clearable);
         }
 
-        mClearButton.setVisibility(clearable ? View.VISIBLE : View.GONE)
+        mClearButton.setVisibility(clearable ? View.VISIBLE : View.GONE);
         mClearButton.setEnabled(clearable);
 
         if (DEBUG) {

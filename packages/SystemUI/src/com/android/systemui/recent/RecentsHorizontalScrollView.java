@@ -45,7 +45,7 @@ public class RecentsHorizontalScrollView extends HorizontalScrollView
     protected int mLastScrollPosition;
     private SwipeHelper mSwipeHelper;
     private RecentsScrollViewPerformanceHelper mPerformanceHelper;
-    mHandler = new Handler();
+    private Handler mHandler;
 
     public RecentsHorizontalScrollView(Context context, AttributeSet attrs) {
         super(context, attrs, 0);
@@ -53,6 +53,7 @@ public class RecentsHorizontalScrollView extends HorizontalScrollView
         float pagingTouchSlop = ViewConfiguration.get(mContext).getScaledPagingTouchSlop();
         mSwipeHelper = new SwipeHelper(SwipeHelper.Y, this, densityScale, pagingTouchSlop);
         mPerformanceHelper = RecentsScrollViewPerformanceHelper.create(context, attrs, this, false);
+        mHandler = new Handler();
     }
 
     private int scrollPositionOfMostRecent() {
