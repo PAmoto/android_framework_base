@@ -234,10 +234,6 @@ public class RecentsPanelView extends RelativeLayout implements OnItemClickListe
             // quit early
             boolean noApps = (mRecentTaskDescriptions.size() == 0 && !mSenseRecent);
 
-            // if there are no apps, either bring up a "No recent apps" message, or just
-            // quit early
-            boolean noApps = (mRecentTaskDescriptions.size() == 0 && !mSenseRecent);
-
             if (mRecentsNoApps != null) {
                 mRecentsNoApps.setVisibility(noApps ? View.VISIBLE : View.INVISIBLE);
             } else {
