@@ -35,7 +35,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
         android:shrinkColumns="2,4"
-        android:stretchColumns="7"
+        android:stretchColumns="8"
         >
         <TableRow>
 
@@ -178,6 +178,15 @@
                 android:paddingRight="2dp"
                 android:singleLine="true"
                 android:text="@string/status_bar_settings_settings_button"
+                />
+
+            <com.android.systemui.statusbar.policy.CircleBattery
+                android:id="@+id/panel_circle_battery"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:paddingRight="6dp"
+                android:layout_gravity="left|center_vertical"
                 />
 
             <FrameLayout
