@@ -2646,6 +2646,12 @@ public final class Settings {
         public static final String LOCKSCREEN_CALENDAR_REMINDERS_ONLY = "lockscreen_calendar_reminders_only";
 
         /**
+         * Always show the battery status on the lockscreen
+         * @hide
+         */
+        public static final String LOCKSCREEN_ALWAYS_SHOW_BATTERY = "lockscreen_always_show_battery";
+
+        /**
          * Where to align the clock on the lockscreen
          * @hide
          */
@@ -2745,6 +2751,7 @@ public final class Settings {
             QUIET_HOURS_STILL,
             QUIET_HOURS_DIM,
             KEYLAYOUT_OVERRIDES,
+            LOCKSCREEN_ALWAYS_SHOW_BATTERY,
         };
 
         // Settings moved to Settings.Secure
