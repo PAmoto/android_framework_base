@@ -240,7 +240,6 @@ public class HoloClock extends FrameLayout {
                 }
             }
 
-            format = format.replaceAll("a", "").trim();
             mClockFormat = sdf = new SimpleDateFormat(format);
             mClockFormatString = format;
         } else {
