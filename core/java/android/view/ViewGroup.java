@@ -2952,6 +2952,17 @@ public abstract class ViewGroup extends View implements ViewParent, ViewManager 
             mDrawLayers = enabled;
             invalidate(true);
 
+            boolean flushLayers = !enabled;
+            AttachInfo info = mAttachInfo;
+            if (info != null && info.mHardwareRenderer != null &&
+                    info.mHardwareRenderer.isEnabled()) {
+                if (!info.mHardwareRenderer.validate()) {
+                    flushLayers = false;
+                }
+            } else {
+                flushLayers = false;
+            }
+
             // We need to invalidate any child with a layer. For instance,
             // if a child is backed by a hardware layer and we disable layers
             // the child is marked as not dirty (flags cleared the last time
@@ -2962,6 +2973,7 @@ public abstract class ViewGroup extends View implements ViewParent, ViewManager 
             for (int i = 0; i < mChildrenCount; i++) {
                 View child = mChildren[i];
                 if (child.mLayerType != LAYER_TYPE_NONE) {
+                    if (flushLayers) child.flushLayer();
                     child.invalidate(true);
                 }
             }

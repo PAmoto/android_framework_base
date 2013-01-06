@@ -111,6 +111,11 @@ abstract class HardwareLayer {
     abstract HardwareCanvas getCanvas();
 
     /**
+     * Flush the render queue associated with this layer.
+     */
+     abstract void flush();
+
+    /**
      * Destroys resources without waiting for a GC. 
      */
     abstract void destroy();
