@@ -27,7 +27,7 @@ namespace uirenderer {
 
 Program::Program(const char* vertex, const char* fragment) {
     mInitialized = false;
-    mHasColorUniform = false;
+    mHasColorUniform = true;
 
     // No need to cache compiled shaders, rely instead on Android's
     // persistent shaders cache
