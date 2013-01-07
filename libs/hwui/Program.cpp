@@ -27,35 +27,47 @@ namespace uirenderer {
 
 Program::Program(const char* vertex, const char* fragment) {
     mInitialized = false;
+    mHasColorUniform = false;
 
-    vertexShader = buildShader(vertex, GL_VERTEX_SHADER);
+    // No need to cache compiled shaders, rely instead on Android's
+    // persistent shaders cache
+    GLuint vertexShader = buildShader(vertex, GL_VERTEX_SHADER);
     if (vertexShader) {
 
-        fragmentShader = buildShader(fragment, GL_FRAGMENT_SHADER);
+        GLuint fragmentShader = buildShader(fragment, GL_FRAGMENT_SHADER);
         if (fragmentShader) {
 
-            id = glCreateProgram();
-            glAttachShader(id, vertexShader);
-            glAttachShader(id, fragmentShader);
-            glLinkProgram(id);
+            mProgramId = glCreateProgram();
+            glAttachShader(mProgramId, vertexShader);
+            glAttachShader(mProgramId, fragmentShader);
+            glLinkProgram(mProgramId);
 
             GLint status;
-            glGetProgramiv(id, GL_LINK_STATUS, &status);
+            glGetProgramiv(mProgramId, GL_LINK_STATUS, &status);
             if (status != GL_TRUE) {
                 LOGE("Error while linking shaders:");
                 GLint infoLen = 0;
-                glGetProgramiv(id, GL_INFO_LOG_LENGTH, &infoLen);
+                glGetProgramiv(mProgramId, GL_INFO_LOG_LENGTH, &infoLen);
                 if (infoLen > 1) {
                     GLchar log[infoLen];
-                    glGetProgramInfoLog(id, infoLen, 0, &log[0]);
+                    glGetProgramInfoLog(mProgramId, infoLen, 0, &log[0]);
                     LOGE("%s", log);
                 }
-                glDeleteShader(vertexShader);
-                glDeleteShader(fragmentShader);
-                glDeleteProgram(id);
             } else {
                 mInitialized = true;
             }
+            
+            glDetachShader(mProgramId, vertexShader);
+            glDetachShader(mProgramId, fragmentShader);
+
+            glDeleteShader(vertexShader);
+            glDeleteShader(fragmentShader);
+
+            if (!mInitialized) {
+                glDeleteProgram(mProgramId);
+            }
+        } else {
+            glDeleteShader(vertexShader);
         }
     }
 
@@ -69,36 +81,34 @@ Program::Program(const char* vertex, const char* fragment) {
 
 Program::~Program() {
     if (mInitialized) {
-        glDeleteShader(vertexShader);
-        glDeleteShader(fragmentShader);
-        glDeleteProgram(id);
+        glDeleteProgram(mProgramId);
     }
 }
 
 int Program::addAttrib(const char* name) {
-    int slot = glGetAttribLocation(id, name);
-    attributes.add(name, slot);
+    int slot = glGetAttribLocation(mProgramId, name);
+    mAttributes.add(name, slot);
     return slot;
 }
 
 int Program::getAttrib(const char* name) {
-    ssize_t index = attributes.indexOfKey(name);
+    ssize_t index = mAttributes.indexOfKey(name);
     if (index >= 0) {
-        return attributes.valueAt(index);
+        return mAttributes.valueAt(index);
     }
     return addAttrib(name);
 }
 
 int Program::addUniform(const char* name) {
-    int slot = glGetUniformLocation(id, name);
-    uniforms.add(name, slot);
+    int slot = glGetUniformLocation(mProgramId, name);
+    mUniforms.add(name, slot);
     return slot;
 }
 
 int Program::getUniform(const char* name) {
-    ssize_t index = uniforms.indexOfKey(name);
+    ssize_t index = mUniforms.indexOfKey(name);
     if (index >= 0) {
-        return uniforms.valueAt(index);
+        return mUniforms.valueAt(index);
     }
     return addUniform(name);
 }
@@ -127,10 +137,11 @@ void Program::set(const mat4& projectionMatrix, const mat4& modelViewMatrix,
         const mat4& transformMatrix, bool offset) {
     mat4 t(projectionMatrix);
     if (offset) {
-        // offset screenspace xy by an amount that compensates for typical precision issues
-        // in GPU hardware that tends to paint hor/vert lines in pixels shifted up and to the left.
-        // This offset value is based on an assumption that some hardware may use as little
-        // as 12.4 precision, so we offset by slightly more than 1/16.
+        // offset screenspace xy by an amount that compensates for typical precision
+        // issues in GPU hardware that tends to paint hor/vert lines in pixels shifted
+        // up and to the left.
+        // This offset value is based on an assumption that some hardware may use as
+        // little as 12.4 precision, so we offset by slightly more than 1/16.
         t.translate(.375, .375, 0);
     }
     t.multiply(transformMatrix);
@@ -140,11 +151,15 @@ void Program::set(const mat4& projectionMatrix, const mat4& modelViewMatrix,
 }
 
 void Program::setColor(const float r, const float g, const float b, const float a) {
-    glUniform4f(getUniform("color"), r, g, b, a);
+    if (!mHasColorUniform) {
+        mColorUniform = getUniform("color");
+        mHasColorUniform = false;
+    }
+    glUniform4f(mColorUniform, r, g, b, a);
 }
 
 void Program::use() {
-    glUseProgram(id);
+    glUseProgram(mProgramId);
     mUse = true;
 
     glEnableVertexAttribArray(position);
@@ -152,8 +167,9 @@ void Program::use() {
 
 void Program::remove() {
     mUse = false;
-
-    glDisableVertexAttribArray(position);
+    // TODO: Is this necessary? It should not be since all of our shaders
+    //       use slot 0 for the position attrib
+    // glDisableVertexAttribArray(position);
 }
 
 }; // namespace uirenderer
