@@ -60,8 +60,8 @@ Program::Program(const char* vertex, const char* fragment) {
                 glDetachShader(mProgramId, mVertexShader);
                 glDetachShader(mProgramId, mFragmentShader);
 
-                glDeleteShader(mvertexShader);
-                glDeleteShader(mfragmentShader);
+                glDeleteShader(mVertexShader);
+                glDeleteShader(mFragmentShader);
 
                 glDeleteProgram(mProgramId);
             } else {
