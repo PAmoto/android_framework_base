@@ -93,16 +93,6 @@ class ANDROID_API Caches: public Singleton<Caches> {
 
     CacheLogger mLogger;
 
-    GLuint mCurrentBuffer;
-
-    // Used to render layers
-    TextureVertex* mRegionMesh;
-    GLuint mRegionMeshIndices;
-
-    mutable Mutex mGarbageLock;
-    Vector<Layer*> mLayerGarbage;
-    Vector<DisplayList*> mDisplayListGarbage;
-
 public:
     enum FlushMode {
         kFlushMode_Layers = 0,
@@ -155,17 +145,36 @@ public:
     /**
      * Binds the VBO used to render simple textured quads.
      */
-    void bindMeshBuffer();
+    bool bindMeshBuffer();
 
     /**
      * Binds the specified VBO if needed.
      */
-    void bindMeshBuffer(const GLuint buffer);
+    bool bindMeshBuffer(const GLuint buffer);
 
     /**
      * Unbinds the VBO used to render simple textured quads.
      */
-    void unbindMeshBuffer();
+    bool unbindMeshBuffer();
+
+    /**
+     * Binds an attrib to the specified float vertex pointer.
+     * Assumes a stride of gMeshStride and a size of 2.
+     */
+    void bindPositionVertexPointer(bool force, GLuint slot, GLvoid* vertices,
+            GLsizei stride = gMeshStride);
+
+    /**
+     * Binds an attrib to the specified float vertex pointer.
+     * Assumes a stride of gMeshStride and a size of 2.
+     */
+    void bindTexCoordsVertexPointer(bool force, GLuint slot, GLvoid* vertices);
+
+    /**
+     * Resets the vertex pointers.
+     */
+    void resetVertexPointers();
+    void resetTexCoordsVertexPointer();
 
     /**
      * Returns the mesh used to draw regions. Calling this method will
@@ -211,6 +220,18 @@ public:
     ResourceCache resourceCache;
 
 private:
+    GLuint mCurrentBuffer;
+    void* mCurrentPositionPointer;
+    void* mCurrentTexCoordsPointer;
+
+    // Used to render layers
+    TextureVertex* mRegionMesh;
+    GLuint mRegionMeshIndices;
+
+    mutable Mutex mGarbageLock;
+    Vector<Layer*> mLayerGarbage;
+    Vector<DisplayList*> mDisplayListGarbage;
+
     DebugLevel mDebugLevel;
     bool mInitialized;
 }; // class Caches
