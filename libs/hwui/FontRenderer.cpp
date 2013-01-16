@@ -640,6 +640,7 @@ void FontRenderer::checkTextureUpdate() {
 
     glBindTexture(GL_TEXTURE_2D, mCurrentCacheTexture->mTextureId);
     mLastCacheTexture = mCurrentCacheTexture;
+
     mUploadTexture = false;
 }
 
