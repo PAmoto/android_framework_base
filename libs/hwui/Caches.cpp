@@ -306,6 +306,7 @@ void Caches::resetTexCoordsVertexPointer() {
 void Caches::enableTexCoordsVertexArray() {
     if (!mTexCoordsArrayEnabled) {
         glEnableVertexAttribArray(Program::kBindingTexCoords);
+        mCurrentTexCoordsPointer = this;
         mTexCoordsArrayEnabled = true;
     }
 }
