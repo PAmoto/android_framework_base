@@ -393,10 +393,6 @@ FontRenderer::~FontRenderer() {
         delete mCacheTexture512;
     }
 
-    if (mTextureId) {
-        glDeleteTextures(1, &mTextureId);
-    }
-
     Vector<Font*> fontsToDereference = mActiveFonts;
     for (uint32_t i = 0; i < fontsToDereference.size(); i++) {
         delete fontsToDereference[i];
