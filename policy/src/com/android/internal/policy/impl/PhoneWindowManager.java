@@ -1126,25 +1126,23 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             mStatusBarCanHide = canStatusBarHide();
             mHasNavigationBar = Settings.System.getInt(mContext.getContentResolver(), Settings.System.SOFT_KEYS, mContext.getResources().getBoolean(com.android.internal.R.bool.config_showNavigationBar) ? 1 : 0) == 1 && mStatusBarCanHide && Settings.System.getInt(mContext.getContentResolver(), Settings.System.STATUSBAR_STATE, 0) != 1;
 
-            mNavigationBarHeight = mHasNavigationBar
-                ? mContext.getResources().getDimensionPixelSize(
-                    com.android.internal.R.dimen.navigation_bar_height)
-                    mContext.getContentResolver(),
-                    Settings.System.NAVIGATION_BAR_HEIGHT,
-                    mContext.getResources()
-                            .getDimensionPixelSize(
-                                    com.android.internal.R.dimen.navigation_bar_height));
-                : 0;
-            mNavigationBarWidth = mHasNavigationBar
-                ? mContext.getResources().getDimensionPixelSize(
-                    com.android.internal.R.dimen.navigation_bar_width)
-                    mContext.getContentResolver(),
-                    Settings.System.NAVIGATION_BAR_WIDTH,
-                    mContext.getResources()
-                            .getDimensionPixelSize(
-                                    com.android.internal.R.dimen.navigation_bar_width));
-                : 0;
-
+            if (mHasNavigationBar) {
+                mNavigationBarHeight = Settings.System.getInt(
+                        mContext.getContentResolver(),
+                        Settings.System.NAVIGATION_BAR_HEIGHT,
+                        mContext.getResources()
+                                .getDimensionPixelSize(
+                                        com.android.internal.R.dimen.navigation_bar_height));
+                mNavigationBarWidth = Settings.System.getInt(
+                        mContext.getContentResolver(),
+                        Settings.System.NAVIGATION_BAR_WIDTH,
+                        mContext.getResources()
+                                .getDimensionPixelSize(
+                                        com.android.internal.R.dimen.navigation_bar_width));
+            } else {
+                mNavigationBarHeight = 0;
+                mNavigationBarWidth = 0;
+            }
             int accelerometerDefault = Settings.System.getInt(resolver,
                     Settings.System.ACCELEROMETER_ROTATION, DEFAULT_ACCELEROMETER_ROTATION);
             
