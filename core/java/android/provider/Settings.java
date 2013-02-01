@@ -2303,6 +2303,12 @@ public final class Settings {
          */
         public static final String NAVIGATION_BAR_WIDTH = "navigation_bar_width";
 
+        /**	
+         * Setting to change navigation button color
+         * @hide
+         */
+        public static final String NAVIGATION_BUTTON_COLOR = "navigation_button_color";
+
         /**
         * Notification Power Widget - Custom Brightness Mode
         * @hide
