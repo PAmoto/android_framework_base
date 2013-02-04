@@ -67,6 +67,9 @@ public class KeyButtonView extends ImageView {
     RectF mRect = new RectF(0f,0f,0f,0f);
     AnimatorSet mPressedAnim;
 
+    int mDurationSpeedOn = 500;
+    int mDurationSpeedOff = 50;
+
     Runnable mCheckLongPress = new Runnable() {
         public void run() {
             if (isPressed()) {
@@ -200,14 +203,14 @@ public class KeyButtonView extends ImageView {
                         ObjectAnimator.ofFloat(this, "glowAlpha", 1f),
                         ObjectAnimator.ofFloat(this, "glowScale", GLOW_MAX_SCALE_FACTOR)
                     );
-                    as.setDuration(50);
+                    as.setDuration(mDurationSpeedOff);
                 } else {
                     as.playTogether(
                         ObjectAnimator.ofFloat(this, "glowAlpha", 0f),
                         ObjectAnimator.ofFloat(this, "glowScale", 1f),
                         ObjectAnimator.ofFloat(this, "drawingAlpha", BUTTON_QUIESCENT_ALPHA)
                     );
-                    as.setDuration(500);
+                    as.setDuration(mDurationSpeedOn);
                 }
                 as.start();
             }
@@ -337,6 +340,7 @@ public class KeyButtonView extends ImageView {
         void observe() {
             ContentResolver resolver = mContext.getContentResolver();
             resolver.registerContentObserver(Settings.System.getUriFor(Settings.System.NAVIGATION_BUTTON_COLOR), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(Settings.System.NAVIGATION_BAR_GLOW_DURATION[1]), false, this);
         updateSettings();
         }
 
@@ -349,10 +353,16 @@ public class KeyButtonView extends ImageView {
     protected void updateSettings() {
         ContentResolver resolver = mContext.getContentResolver();
 
+        durationSpeedOff = Settings.System.getInt(resolver,
+                Settings.System.NAVIGATION_BAR_GLOW_DURATION[0], 10);
+        durationSpeedOn = Settings.System.getInt(resolver,
+                Settings.System.NAVIGATION_BAR_GLOW_DURATION[1], 100);
+
         try {
             setColorFilter(null);
             setColorFilter(Settings.System.getInt(resolver, Settings.System.NAVIGATION_BUTTON_COLOR));
         } catch (SettingNotFoundException e) {
         }
+        invalidate();
     }
 }
