@@ -353,9 +353,9 @@ public class KeyButtonView extends ImageView {
     protected void updateSettings() {
         ContentResolver resolver = mContext.getContentResolver();
 
-        durationSpeedOff = Settings.System.getInt(resolver,
+        mdurationSpeedOff = Settings.System.getInt(resolver,
                 Settings.System.NAVIGATION_BAR_GLOW_DURATION[0], 10);
-        durationSpeedOn = Settings.System.getInt(resolver,
+        mdurationSpeedOn = Settings.System.getInt(resolver,
                 Settings.System.NAVIGATION_BAR_GLOW_DURATION[1], 100);
 
         try {
