@@ -2321,6 +2321,12 @@ public final class Settings {
         };
 
         /**
+         * Color to tint the nav bar glow
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_GLOW_TINT = "navigation_bar_glow_tint";
+
+        /**
         * Notification Power Widget - Custom Brightness Mode
         * @hide
         */
