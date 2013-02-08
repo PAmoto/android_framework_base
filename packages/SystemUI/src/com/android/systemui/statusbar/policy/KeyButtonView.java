@@ -68,8 +68,8 @@ public class KeyButtonView extends ImageView {
     RectF mRect = new RectF(0f,0f,0f,0f);
     AnimatorSet mPressedAnim;
 
-    int DurationSpeedOn = 500;
-    int DurationSpeedOff = 50;
+    int durationSpeedOn = 500;
+    int durationSpeedOff = 50;
     int mGlowBGColor = 0;
 
     Runnable mCheckLongPress = new Runnable() {
@@ -207,14 +207,14 @@ public class KeyButtonView extends ImageView {
                         ObjectAnimator.ofFloat(this, "glowAlpha", 1f),
                         ObjectAnimator.ofFloat(this, "glowScale", GLOW_MAX_SCALE_FACTOR)
                     );
-                    as.setDuration(DurationSpeedOff);
+                    as.setDuration(durationSpeedOff);
                 } else {
                     as.playTogether(
                         ObjectAnimator.ofFloat(this, "glowAlpha", 0f),
                         ObjectAnimator.ofFloat(this, "glowScale", 1f),
                         ObjectAnimator.ofFloat(this, "drawingAlpha", BUTTON_QUIESCENT_ALPHA)
                     );
-                    as.setDuration(DurationSpeedOn);
+                    as.setDuration(durationSpeedOn);
                 }
                 as.start();
             }
