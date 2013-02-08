@@ -2327,6 +2327,12 @@ public final class Settings {
         public static final String NAVIGATION_BAR_GLOW_TINT = "navigation_bar_glow_tint";
 
         /**
+         * Adjust nav bar button alpha
+         * @hide
+         */
+        public static final String NAVIGATION_BAR_BUTTON_ALPHA = "navigation_bar_button_alpha";
+
+        /**
         * Notification Power Widget - Custom Brightness Mode
         * @hide
         */
