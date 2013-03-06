@@ -58,6 +58,8 @@ public class SignalClusterView
 
     Handler mHandler;
 
+    private SettingsObserver mSettingsObserver;
+
     class SettingsObserver extends ContentObserver {
         SettingsObserver(Handler handler) {
             super(handler);
@@ -87,9 +89,7 @@ public class SignalClusterView
         super(context, attrs, defStyle);
 
         mHandler = new Handler();
-
-        SettingsObserver settingsObserver = new SettingsObserver(mHandler);
-        settingsObserver.observe();
+        mSettingsObserver = new SettingsObserver(mHandler);
     }
 
     public void setNetworkController(NetworkController nc) {
@@ -110,6 +110,7 @@ public class SignalClusterView
         mMobileType     = (ImageView) findViewById(R.id.mobile_type);
         mSpacer         =             findViewById(R.id.spacer);
 
+        mSettingsObserver.observe();
         apply();
     }
 
@@ -122,6 +123,8 @@ public class SignalClusterView
         mMobile         = null;
         mMobileActivity = null;
         mMobileType     = null;
+
+        mContext.getContentResolver().unregisterContentObserver(mSettingsObserver);
 
         super.onDetachedFromWindow();
     }
