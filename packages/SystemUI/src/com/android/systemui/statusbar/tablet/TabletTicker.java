@@ -29,6 +29,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.provider.Settings;
 import android.util.Slog;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -225,7 +226,9 @@ public class TabletTicker
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams(width, mLargeIconHeight,
                 WindowManager.LayoutParams.TYPE_STATUS_BAR_PANEL, windowFlags,
                 PixelFormat.TRANSLUCENT);
-        lp.gravity = Gravity.BOTTOM | Gravity.RIGHT;
+        lp.gravity = ( Settings.System.getInt(mContext.getContentResolver(),
+                        Settings.System.STATUS_BAR_TABLET_TOP, 0) == 1 ) ?
+                        Gravity.TOP | Gravity.LEFT : Gravity.BOTTOM | Gravity.LEFT;
 //        lp.windowAnimations = com.android.internal.R.style.Animation_Toast;
 
         mLayoutTransition = new LayoutTransition();

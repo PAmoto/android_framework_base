@@ -2455,6 +2455,12 @@ public final class Settings {
         public static final String STATUS_BAR_HW_RENDERING = "status_bar_hw_rendering";
 
         /**
+         * Status Bar Tablet mode position on top
+         * @hide
+         */
+        public static final String STATUS_BAR_TABLET_TOP = "status_bar_tablet_top";
+
+        /**
          * Lockscreen Vibration
          * @hide
          */

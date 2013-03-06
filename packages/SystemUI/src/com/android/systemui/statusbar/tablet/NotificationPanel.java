@@ -35,6 +35,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.RelativeLayout;
+import android.provider.Settings;
 
 import com.android.systemui.R;
 
@@ -64,7 +65,7 @@ public class NotificationPanel extends RelativeLayout implements StatusBarPanel,
     // amount to slide mContentParent down by when mContentFrame is missing
     float mContentFrameMissingTranslation;
 
-    Choreographer mChoreo = new Choreographer();
+    Choreographer mChoreo = null;
 
     public NotificationPanel(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
@@ -103,6 +104,12 @@ public class NotificationPanel extends RelativeLayout implements StatusBarPanel,
         mShowing = false;
 
         setContentFrameVisible(mNotificationCount > 0, false);
+
+        int hyperspaceOfframp = (Settings.System.getInt(getContext().getContentResolver(),
+                                    Settings.System.STATUS_BAR_TABLET_TOP, 0) == 1) ?
+                                -200 : 200;
+
+        mChoreo = new Choreographer(hyperspaceOfframp);
     }
 
     private View.OnClickListener mClearButtonListener = new View.OnClickListener() {
@@ -367,15 +374,14 @@ public class NotificationPanel extends RelativeLayout implements StatusBarPanel,
         boolean mVisible;
         int mPanelHeight;
         AnimatorSet mContentAnim;
+        int mHyperspaceOfframp = 200;
 
         // should group this into a multi-property animation
         final static int OPEN_DURATION = 250;
         final static int CLOSE_DURATION = 250;
 
-        // the panel will start to appear this many px from the end
-        final int HYPERSPACE_OFFRAMP = 200;
-
-        Choreographer() {
+        Choreographer(int hyperspaceOfframp) {
+            mHyperspaceOfframp = hyperspaceOfframp;
         }
 
         void createAnimation(boolean appearing) {
@@ -393,10 +399,10 @@ public class NotificationPanel extends RelativeLayout implements StatusBarPanel,
                 if (mNotificationCount == 0) {
                     end += mContentFrameMissingTranslation;
                 }
-                start = HYPERSPACE_OFFRAMP+end;
+                start = mHyperspaceOfframp+end;
             } else {
                 start = y;
-                end = y + HYPERSPACE_OFFRAMP;
+                end = y + mHyperspaceOfframp;
             }
 
             Animator posAnim = ObjectAnimator.ofFloat(mContentParent, "translationY",

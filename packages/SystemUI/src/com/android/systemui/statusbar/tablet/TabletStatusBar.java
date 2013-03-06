@@ -181,7 +181,6 @@ public class TabletStatusBar extends StatusBar implements
     NetworkController mNetworkController;
 
     private boolean mHasDockBattery;
-
     ViewGroup mBarContents;
 
     // hide system chrome ("lights out") support
@@ -219,6 +218,8 @@ public class TabletStatusBar extends StatusBar implements
     private boolean mUseTabletSoftKeys = false;
     private Handler mConfigHandler;
 
+    private boolean isOnTop = false;
+    private int mGravity = Gravity.BOTTOM;
 
     private final class SettingsObserver extends ContentObserver {
         SettingsObserver(Handler handler) {
@@ -231,11 +232,14 @@ public class TabletStatusBar extends StatusBar implements
                     Settings.System.SOFT_KEYS), false, this);
             resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.MAX_NOTIFICATION_ICONS), false, this);
+            resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.STATUS_BAR_TABLET_TOP), false, this);
         }
 
         @Override public void onChange(boolean selfChange) {
-            loadDimens();
+            //loadDimens();
             recreateStatusBar();
+            updateBarPosition();
         }
     }
 
@@ -244,13 +248,17 @@ public class TabletStatusBar extends StatusBar implements
         final Context context = mContext;
         final Resources res = mContext.getResources();
 
-        mConfigHandler = new Handler();
-        SettingsObserver settingsObserver = new SettingsObserver(mConfigHandler);
-        settingsObserver.observe();
+        if (mConfigHandler == null) {
+            mConfigHandler = new Handler();
+            SettingsObserver settingsObserver = new SettingsObserver(mConfigHandler);
+            settingsObserver.observe();
+        }
 
         // Notification Panel
         mNotificationPanel = (NotificationPanel)View.inflate(context,
-                R.layout.status_bar_notification_panel, null);
+                (isOnTop) ? R.layout.status_bar_notification_panel_top : R.layout.status_bar_notification_panel,
+                null);
+
         mNotificationPanel.setBar(this);
         mNotificationPanel.show(false, false);
         mNotificationPanel.setOnTouchListener(
@@ -311,7 +319,7 @@ public class TabletStatusBar extends StatusBar implements
                     | WindowManager.LayoutParams.FLAG_SPLIT_TOUCH
                     | WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
                 PixelFormat.TRANSLUCENT);
-        lp.gravity = Gravity.BOTTOM | Gravity.RIGHT;
+        lp.gravity = mGravity | Gravity.RIGHT;
         lp.setTitle("NotificationPanel");
         lp.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_STATE_UNCHANGED
                 | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING;
@@ -353,7 +361,7 @@ public class TabletStatusBar extends StatusBar implements
                         | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM
                         | WindowManager.LayoutParams.FLAG_SPLIT_TOUCH,
                     PixelFormat.TRANSLUCENT);
-            lp.gravity = Gravity.BOTTOM | Gravity.RIGHT;
+            lp.gravity = mGravity | Gravity.LEFT;
             lp.y = res.getDimensionPixelOffset(R.dimen.peek_window_y_offset);
             lp.setTitle("NotificationPeekWindow");
             lp.windowAnimations = com.android.internal.R.style.Animation_Toast;
@@ -382,7 +390,7 @@ public class TabletStatusBar extends StatusBar implements
                     | WindowManager.LayoutParams.FLAG_SPLIT_TOUCH
                     | WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
                 PixelFormat.TRANSLUCENT);
-        lp.gravity = Gravity.BOTTOM | Gravity.LEFT;
+        lp.gravity = mGravity | Gravity.LEFT;
         lp.setTitle("RecentsPanel");
         lp.windowAnimations = R.style.Animation_RecentPanel;
         lp.softInputMode = WindowManager.LayoutParams.SOFT_INPUT_STATE_UNCHANGED
@@ -408,7 +416,7 @@ public class TabletStatusBar extends StatusBar implements
                     | WindowManager.LayoutParams.FLAG_SPLIT_TOUCH
                     | WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
                 PixelFormat.TRANSLUCENT);
-        lp.gravity = Gravity.BOTTOM | Gravity.RIGHT;
+        lp.gravity = mGravity | Gravity.RIGHT;
         lp.setTitle("InputMethodsPanel");
         lp.windowAnimations = R.style.Animation_RecentPanel;
 
@@ -431,7 +439,7 @@ public class TabletStatusBar extends StatusBar implements
                     | WindowManager.LayoutParams.FLAG_SPLIT_TOUCH
                     | WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
                 PixelFormat.TRANSLUCENT);
-        lp.gravity = Gravity.BOTTOM | Gravity.RIGHT;
+        lp.gravity = mGravity | Gravity.RIGHT;
         lp.setTitle("CompatModePanel");
         lp.windowAnimations = android.R.style.Animation_Dialog;
 
@@ -504,6 +512,15 @@ public class TabletStatusBar extends StatusBar implements
     protected void loadDimens() {
         final Resources res = mContext.getResources();
 
+        if (Settings.System.getInt(mContext.getContentResolver(),
+            Settings.System.STATUS_BAR_TABLET_TOP, 0) == 1) {
+            isOnTop = true;
+            mGravity = Gravity.TOP;
+        } else {
+            isOnTop = false;
+            mGravity = Gravity.BOTTOM;
+        }
+
         mNaturalBarHeight = res.getDimensionPixelSize(
                 com.android.internal.R.dimen.system_bar_height);
 
@@ -544,8 +561,11 @@ public class TabletStatusBar extends StatusBar implements
 
         // This guy will listen for HDMI plugged broadcasts so we can resize the
         // status bar as appropriate.
-        mHeightReceiver = new HeightReceiver(mContext);
-        mHeightReceiver.registerReceiver();
+        boolean hrRegistered = (mHeightReceiver == null) ? false : true;
+        if (!hrRegistered) {
+            mHeightReceiver = new HeightReceiver(mContext);
+            mHeightReceiver.registerReceiver();
+        }
         loadDimens();
 
         final TabletStatusBarView sb = (TabletStatusBarView)View.inflate(
@@ -755,7 +775,8 @@ public class TabletStatusBar extends StatusBar implements
         ScrollView scroller = (ScrollView)mPile.getParent();
         scroller.setFillViewport(true);
 
-        mHeightReceiver.addOnBarHeightChangedListener(this);
+        if (!hrRegistered)
+            mHeightReceiver.addOnBarHeightChangedListener(this);
 
         // receive broadcasts
         IntentFilter filter = new IntentFilter();
@@ -771,7 +792,21 @@ public class TabletStatusBar extends StatusBar implements
     }
 
     protected int getStatusBarGravity() {
-        return Gravity.BOTTOM | Gravity.FILL_HORIZONTAL;
+        return mGravity | Gravity.FILL_HORIZONTAL;
+    }
+
+    public void updateBarPosition() {
+        final WindowManager.LayoutParams lp
+                = (WindowManager.LayoutParams)mStatusBarContainer.getLayoutParams();
+        if (lp == null) {
+            // haven't been added yet
+            return;
+        }
+        if (lp.gravity != getStatusBarGravity()) {
+            lp.gravity = getStatusBarGravity();
+            final WindowManager wm = WindowManagerImpl.getDefault();
+            wm.updateViewLayout(mStatusBarContainer, lp);
+        }
     }
 
     public void onBarHeightChanged(int height) {
@@ -1595,7 +1630,8 @@ public class TabletStatusBar extends StatusBar implements
                         mVT.addMovement(event);
                         mVT.computeCurrentVelocity(1000); // pixels per second
                         // require a little more oomph once we're already in peekaboo mode
-                        if (mVT.getYVelocity() < -mNotificationFlingVelocity) {
+                        if ( (isOnTop && (mVT.getYVelocity() > mNotificationFlingVelocity)) ||
+                            (!isOnTop && (mVT.getYVelocity() < -mNotificationFlingVelocity)) ) {
                             animateExpand();
                             visibilityChanged(true);
                             hilite(false);
@@ -1612,8 +1648,8 @@ public class TabletStatusBar extends StatusBar implements
                          // was this a sloppy tap?
                          && Math.abs(event.getX() - mInitialTouchX) < mTouchSlop
                          && Math.abs(event.getY() - mInitialTouchY) < (mTouchSlop / 3)
-                         // dragging off the bottom doesn't count
-                         && (int)event.getY() < v.getBottom()) {
+                         // dragging off the top doesn't count
+                         /*&& (int)event.getY() > v.getTop()*/ ) {
                             animateExpand();
                             visibilityChanged(true);
                             v.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_CLICKED);
@@ -1695,13 +1731,24 @@ public class TabletStatusBar extends StatusBar implements
                         mVT.addMovement(event);
                         mVT.computeCurrentVelocity(1000); // pixels per second
                         // require a little more oomph once we're already in peekaboo mode
-                        if (!panelShowing && (
-                               (peeking && mVT.getYVelocity() < -mNotificationFlingVelocity*3)
-                            || (mVT.getYVelocity() < -mNotificationFlingVelocity))) {
-                            mHandler.removeMessages(MSG_OPEN_NOTIFICATION_PEEK);
-                            mHandler.removeMessages(MSG_OPEN_NOTIFICATION_PANEL);
-                            mHandler.sendEmptyMessage(MSG_CLOSE_NOTIFICATION_PEEK);
-                            mHandler.sendEmptyMessage(MSG_OPEN_NOTIFICATION_PANEL);
+                        if (isOnTop) {
+                            if (!panelShowing && (
+                                   (peeking && mVT.getYVelocity() > mNotificationFlingVelocity*3)
+                                || (mVT.getYVelocity() > mNotificationFlingVelocity))) {
+                                mHandler.removeMessages(MSG_OPEN_NOTIFICATION_PEEK);
+                                mHandler.removeMessages(MSG_OPEN_NOTIFICATION_PANEL);
+                                mHandler.sendEmptyMessage(MSG_CLOSE_NOTIFICATION_PEEK);
+                                mHandler.sendEmptyMessage(MSG_OPEN_NOTIFICATION_PANEL);
+                            }
+                        } else {
+                            if (!panelShowing && (
+                                   (peeking && mVT.getYVelocity() < -mNotificationFlingVelocity*3)
+                                || (mVT.getYVelocity() < -mNotificationFlingVelocity))) {
+                                mHandler.removeMessages(MSG_OPEN_NOTIFICATION_PEEK);
+                                mHandler.removeMessages(MSG_OPEN_NOTIFICATION_PANEL);
+                                mHandler.sendEmptyMessage(MSG_CLOSE_NOTIFICATION_PEEK);
+                                mHandler.sendEmptyMessage(MSG_OPEN_NOTIFICATION_PANEL);
+                            }
                         }
                     }
                     return true;
@@ -1713,8 +1760,8 @@ public class TabletStatusBar extends StatusBar implements
                                 // was this a sloppy tap?
                                 && Math.abs(event.getX() - mInitialTouchX) < mTouchSlop
                                 && Math.abs(event.getY() - mInitialTouchY) < (mTouchSlop / 3)
-                                // dragging off the bottom doesn't count
-                                && (int)event.getY() < v.getBottom()) {
+                                // dragging off the top doesn't count
+                                /*&& (int)event.getY() > v.getTop()*/ ) {
                             Message peekMsg = mHandler.obtainMessage(MSG_OPEN_NOTIFICATION_PEEK);
                             peekMsg.arg1 = mPeekIndex;
                             mHandler.removeMessages(MSG_OPEN_NOTIFICATION_PEEK);
